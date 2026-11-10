@@ -8,4 +8,5 @@ function required(name: string, value: string | undefined): string {
 export const env = {
   supabaseUrl: required('VITE_SUPABASE_URL', import.meta.env.VITE_SUPABASE_URL),
   supabaseAnonKey: required('VITE_SUPABASE_ANON_KEY', import.meta.env.VITE_SUPABASE_ANON_KEY),
+  loginDomain: import.meta.env.VITE_LOGIN_DOMAIN || 'l17.local',
 } as const
