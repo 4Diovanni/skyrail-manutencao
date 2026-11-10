@@ -26,3 +26,4 @@ button:disabled { opacity: .6; }
 .layout nav a { color: var(--muted); text-decoration: none; }
 .layout nav a.active { color: var(--accent); font-weight: 600; }
 .layout main { padding: 16px; }
+.hint { color: var(--muted); font-size: .9rem; }

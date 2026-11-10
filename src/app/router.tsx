@@ -1,6 +1,7 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom'
 import { LoginPage } from '../auth/LoginPage'
 import { RequireAuth } from '../auth/RequireAuth'
+import { TrocarSenhaPage } from '../auth/TrocarSenhaPage'
 import { PassagemPage } from '../modules/passagem/PassagemPage'
 import { PreventivasPage } from '../modules/preventivas/PreventivasPage'
 import { RelatorioPage } from '../modules/relatorio/RelatorioPage'
@@ -11,6 +12,7 @@ export const router = createBrowserRouter([
   {
     element: <RequireAuth />,
     children: [
+      { path: 'trocar-senha', element: <TrocarSenhaPage /> },
       {
         element: <AppLayout />,
         children: [
