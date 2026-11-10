@@ -94,3 +94,74 @@ textarea { resize: vertical; }
 .quadro-assinatura { width: 100%; max-width: 600px; aspect-ratio: 600 / 220; background: #fff; border: 2px dashed var(--border); border-radius: 10px; touch-action: none; display: block; margin: 8px 0; }
 .assinatura-atual { display: block; max-width: 300px; width: 100%; background: #fff; border-radius: 8px; margin-top: 8px; }
 label.botao.sec { background: var(--bg); color: var(--fg); border: 1px solid var(--border); text-align: center; cursor: pointer; font-weight: 600; }
+
+/* ===== preventivas ===== */
+.titulo-pagina { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.titulo-pagina h2 { margin: 8px 0; }
+.sec-titulo { font-size: .9rem; color: var(--muted); text-transform: uppercase; letter-spacing: .03em; margin: 18px 0 8px; }
+.lista-prev { display: grid; gap: 8px; }
+@media (min-width: 900px) { .lista-prev { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.prev-item { display: grid; gap: 6px; color: inherit; text-decoration: none; margin: 0; }
+.prev-item-topo { display: flex; justify-content: space-between; gap: 8px; align-items: center; }
+.prev-item small { color: var(--muted); }
+.st-ok { color: #15803d; } .st-nok { color: #dc2626; } .st-and { color: #b45309; }
+.local-erro { color: #dc2626; }
+.progresso { position: relative; height: 22px; background: var(--bg); border: 1px solid var(--border); border-radius: 11px; overflow: hidden; }
+.progresso span { position: absolute; inset: 0 auto 0 0; background: #86efac; }
+.progresso em { position: relative; display: block; text-align: center; font-style: normal; font-size: .75rem; font-weight: 700; line-height: 20px; }
+.progresso.grande { height: 28px; border-radius: 14px; margin-bottom: 12px; position: sticky; top: 0; z-index: 2; }
+.progresso.grande em { line-height: 26px; font-size: .85rem; }
+.grade-sistemas { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+@media (min-width: 640px) { .grade-sistemas { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); } }
+.sistema { display: grid; gap: 2px; text-align: left; background: var(--card); color: var(--fg); border: 1px solid var(--border); border-radius: 10px; padding: 12px; min-height: 64px; }
+.sistema small { color: var(--muted); font-size: .75rem; }
+.sistema.on { border: 2px solid var(--accent); }
+.prev-modelo { display: flex; gap: 12px; align-items: center; text-align: left; color: var(--fg); width: 100%; margin: 0; }
+.prev-modelo .cod { background: #2f3e4e; color: #fff; font-weight: 800; border-radius: 8px; min-width: 48px; height: 40px; display: grid; place-items: center; flex: none; }
+.prev-modelo small { display: block; color: var(--muted); }
+.unidades { display: flex; flex-wrap: wrap; gap: 6px; }
+.unidade { background: var(--bg); color: var(--fg); border: 1px solid var(--border); padding: 6px 8px; min-height: 40px; min-width: 64px; font-weight: 700; font-size: .85rem; }
+.unidade.parcial { border-color: #f59e0b; background: #fffbeb; color: #78350f; }
+.unidade.ok { border-color: #16a34a; background: #dcfce7; color: #14532d; }
+.unidade.nok { border-color: #dc2626; background: #fee2e2; color: #7f1d1d; }
+.unidade.on { outline: 3px solid var(--accent); outline-offset: 1px; }
+.unidade-barra { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; margin: 10px 0 6px; }
+.unidade-barra h3 { margin: 0; }
+.grupo-prev h4 { margin: 14px 0 2px; font-size: .9rem; }
+.grupo-sub { margin: 0 0 6px; font-size: .8rem; color: var(--muted); }
+.item-prev { border: 1px solid var(--border); border-left: 5px solid var(--border); border-radius: 10px; padding: 10px; margin-bottom: 8px; display: grid; gap: 8px; min-width: 0; }
+.item-prev.r-ok { border-left-color: #16a34a; }
+.item-prev.r-nok { border-left-color: #dc2626; }
+.item-prev.r-na { border-left-color: #9ca3af; }
+.item-topo { display: flex; gap: 8px; }
+.item-topo p { margin: 0; font-size: .92rem; }
+.item-id { font-weight: 800; color: var(--muted); flex: none; }
+.resp { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+.resp button { background: var(--bg); color: var(--fg); border: 1px solid var(--border); font-weight: 800; min-height: 44px; }
+.resp button.r-ok.on { background: #16a34a; border-color: #16a34a; color: #fff; }
+.resp button.r-nok.on { background: #dc2626; border-color: #dc2626; color: #fff; }
+.resp button.r-na.on { background: #6b7280; border-color: #6b7280; color: #fff; }
+.medicoes { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; }
+.medicoes label { display: grid; gap: 2px; font-size: .78rem; color: var(--muted); min-width: 0; }
+.medicoes em { font-style: normal; }
+.medicoes .fora input { border-color: #dc2626; }
+.medicoes .fora small { color: #dc2626; font-weight: 700; }
+.item-acoes { display: flex; gap: 12px; flex-wrap: wrap; }
+button.link { background: none; color: var(--accent); padding: 4px 0; min-height: 32px; font-weight: 600; }
+.guia-item { font-size: .85rem; }
+.guia-item summary { color: #1f5c7a; cursor: pointer; font-weight: 600; min-height: 32px; display: flex; align-items: center; }
+.guia-item p { margin: 6px 0; }
+.figuras { color: var(--muted); font-size: .8rem; }
+.guia summary { font-weight: 700; cursor: pointer; min-height: 32px; }
+.guia h4 { margin: 12px 0 4px; font-size: .9rem; }
+.guia p, .guia li { font-size: .88rem; }
+.instrumentos { display: grid; gap: 8px; }
+.instrumento { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px; padding-bottom: 8px; border-bottom: 1px dashed var(--border); }
+.instrumento input { grid-column: 1; }
+.instrumento button { grid-column: 2; grid-row: 1; }
+@media (min-width: 760px) { .instrumento { grid-template-columns: 2fr 2fr 2fr auto; } .instrumento input, .instrumento button { grid-column: auto; grid-row: auto; } }
+.dia-extra { border: 1px solid var(--border); border-radius: 10px; margin: 12px 0; padding: 10px; }
+.dia-extra legend { font-weight: 700; padding: 0 4px; }
+.ocorrencia { border: 1px solid var(--border); border-radius: 10px; padding: 10px; margin-bottom: 10px; display: grid; gap: 8px; }
+.form-prev .card > .sec { margin-top: 8px; width: 100%; }
+@media (min-width: 900px) { .form-prev { max-width: 900px; margin: 0 auto; } }
