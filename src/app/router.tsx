@@ -3,7 +3,9 @@ import { LoginPage } from '../auth/LoginPage'
 import { RequireAuth } from '../auth/RequireAuth'
 import { TrocarSenhaPage } from '../auth/TrocarSenhaPage'
 import { PassagemPage } from '../modules/passagem/PassagemPage'
-import { PreventivasPage } from '../modules/preventivas/PreventivasPage'
+import { NovaPreventivaPage } from '../modules/preventivas/ui/NovaPreventivaPage'
+import { PreventivaPage } from '../modules/preventivas/ui/PreventivaPage'
+import { PreventivasPage } from '../modules/preventivas/ui/PreventivasPage'
 import { AtividadePage } from '../modules/relatorio/ui/AtividadePage'
 import { DiaPage } from '../modules/relatorio/ui/DiaPage'
 import { DocumentosPage } from '../modules/relatorio/ui/DocumentosPage'
@@ -22,6 +24,8 @@ export const router = createBrowserRouter([
         children: [
           { index: true, element: <Navigate to="/relatorio" replace /> },
           { path: 'preventivas', element: <PreventivasPage /> },
+          { path: 'preventivas/nova', element: <NovaPreventivaPage /> },
+          { path: 'preventivas/:id', element: <PreventivaPage /> },
           { path: 'relatorio', element: <DiaPage /> },
           { path: 'relatorio/atividade/nova', element: <AtividadePage /> },
           { path: 'relatorio/atividade/:id', element: <AtividadePage /> },
