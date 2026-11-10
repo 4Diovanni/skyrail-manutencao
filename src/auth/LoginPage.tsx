@@ -1,11 +1,13 @@
 import { useState, type FormEvent } from 'react'
 import { Navigate } from 'react-router-dom'
+import { env } from '../lib/env'
 import { supabase } from '../lib/supabase'
 import { useAuth } from './AuthContext'
+import { usuarioParaEmail } from './credenciais'
 
 export function LoginPage() {
   const { session } = useAuth()
-  const [email, setEmail] = useState('')
+  const [re, setRe] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
@@ -14,10 +16,15 @@ export function LoginPage() {
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault()
-    setBusy(true)
     setError(null)
-    const { error } = await supabase.auth.signInWithPassword({ email: email.trim(), password })
-    if (error) setError('E-mail ou senha inválidos.')
+    const email = usuarioParaEmail(re, env.loginDomain)
+    if (!email) {
+      setError('Digite a sua matrícula (RE), só números.')
+      return
+    }
+    setBusy(true)
+    const { error } = await supabase.auth.signInWithPassword({ email, password })
+    if (error) setError('Matrícula ou senha inválidas.')
     setBusy(false)
   }
 
@@ -26,8 +33,8 @@ export function LoginPage() {
       <h1>SkyRail L17 · Manutenção</h1>
       <form onSubmit={onSubmit}>
         <label>
-          E-mail
-          <input type="email" autoComplete="username" required value={email} onChange={(e) => setEmail(e.target.value)} />
+          Matrícula (RE)
+          <input inputMode="numeric" autoComplete="username" required value={re} onChange={(e) => setRe(e.target.value)} />
         </label>
         <label>
           Senha
@@ -36,6 +43,7 @@ export function LoginPage() {
         {error && <p role="alert" className="error">{error}</p>}
         <button type="submit" disabled={busy}>{busy ? 'Entrando…' : 'Entrar'}</button>
       </form>
+      <p className="hint">Esqueceu a senha? Peça ao administrador para gerar uma nova senha provisória.</p>
     </main>
   )
 }
