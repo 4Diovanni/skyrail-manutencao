@@ -21,6 +21,23 @@ npm run dev
 ## Banco
 Migrações em `supabase/migrations`. Aplique com a Supabase CLI (`supabase db push`) ou cole no SQL Editor, em ordem.
 
+Testes de RLS num Postgres local (aplica as migrações num banco descartável):
+```bash
+PGHOST=localhost PGUSER=postgres npm run test:db
+```
+
+No painel do Supabase, em Authentication: desative o cadastro público (só o admin cria contas)
+e a confirmação de e-mail.
+
+## Usuários
+Login com matrícula (RE) e senha pessoal. O admin cria cada conta com uma senha provisória
+aleatória, e a troca é obrigatória no primeiro acesso:
+```bash
+SUPABASE_URL=... SUPABASE_SERVICE_ROLE_KEY=... LOGIN_DOMAIN=l17.local \
+  npm run criar-usuario -- --re 53000000 --nome "Nome Sobrenome" --perfil tecnico
+```
+A `service_role` fica só na máquina do admin, nunca no repositório nem no `.env.local` do front.
+
 ## Segurança
 - Login obrigatório: todas as rotas passam por `RequireAuth`.
 - RLS ativo em todas as tabelas; perfis `tecnico`, `supervisor`, `admin`.
