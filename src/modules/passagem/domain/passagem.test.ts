@@ -159,7 +159,16 @@ describe('texto do e-mail', () => {
     expect(t).toContain('3 atividades (2 corretivas, 1 preventiva) · 2 concluídas, 1 não realizada · 1h15')
     expect(t).toContain('• VJD · Porta travada · CIM 1234 · concluída')
     expect(t).toContain('• BPA · Alarme falso · sem CIM · concluída')
-    expect(t).toContain('• PQ AMV PQ MOB não realizada (Sem liberação do CCO) · reprogramar p/ 12/11/2026')
+    expect(t).toContain('• AMV PQ MOB não realizada (Sem liberação do CCO) · reprogramar p/ 12/11/2026')
     expect(t).toContain('• VJD PDM11 – porta isolada')
+  })
+})
+
+describe('turno atual', () => {
+  it('03h ainda é o Noturno que começou no dia anterior', async () => {
+    const { turnoAtual } = await import('./passagem')
+    expect(turnoAtual(new Date(2026, 10, 11, 3, 0))).toEqual({ data: '2026-11-10', turno: 'Noturno' })
+    expect(turnoAtual(new Date(2026, 10, 10, 19, 0))).toEqual({ data: '2026-11-10', turno: 'Noturno' })
+    expect(turnoAtual(new Date(2026, 10, 10, 9, 0))).toEqual({ data: '2026-11-10', turno: 'Diurno' })
   })
 })

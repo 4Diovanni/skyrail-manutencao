@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
 import { registrarSincronizacao, sincronizarAgora } from '../lib/sync'
+import { processarFilaPassagem } from '../modules/passagem/data/envio'
 import { processarFila as filaPreventivas } from '../modules/preventivas/data/envio'
 import { processarFila } from '../modules/relatorio/data/envio'
 import { supabase } from '../lib/supabase'
@@ -34,10 +35,12 @@ export function AppLayout() {
   useEffect(() => {
     const p1 = registrarSincronizacao(processarFila)
     const p2 = registrarSincronizacao(filaPreventivas)
+    const p3 = registrarSincronizacao(processarFilaPassagem)
     void sincronizarAgora()
     return () => {
       p1()
       p2()
+      p3()
     }
   }, [])
 
