@@ -181,3 +181,49 @@ export class Tabela {
     }
   }
 }
+
+/**
+ * Tabela que continua em novas páginas quando não cabe (roteiros longos, ex.: 20 portas).
+ * Não reduz a escala: cada linha mantém a altura pedida. Linhas marcadas com "repetir"
+ * (cabeçalho de colunas) são redesenhadas no topo da página seguinte.
+ */
+export class TabelaPaginada extends Tabela {
+  private fila: { h: number; cels: Celula[]; repetir?: boolean; juntoCom?: number }[] = []
+  linhaP(h: number, cels: (Omit<Celula, 'w'> & { span: number })[], op: { repetir?: boolean; juntoCom?: number } = {}) {
+    let col = 0
+    this.fila.push({
+      h,
+      ...op,
+      cels: cels.map(({ span, ...c }) => {
+        const w = this.w(col, span)
+        col += span
+        return { ...c, w }
+      }),
+    })
+  }
+  /** Desenha a partir de y; devolve a página e o y final. "novaPagina" cria a próxima página já com cabeçalho. */
+  desenharPaginado(p: Pagina, x: number, y: number, yMax: number, tamanhoBase: number, novaPagina: () => { p: Pagina; y: number }) {
+    let pg = p
+    let yy = y
+    let cabecalho: { h: number; cels: Celula[] }[] = []
+    for (let i = 0; i < this.fila.length; i++) {
+      const l = this.fila[i]!
+      if (l.repetir) cabecalho = [...cabecalho.filter((c) => c !== l), l]
+      // mantém a linha junto com as próximas N (ex.: título de grupo + primeiro item)
+      const bloco = this.fila.slice(i, i + 1 + (l.juntoCom ?? 0)).reduce((s, x) => s + x.h, 0)
+      if (yy + bloco > yMax) {
+        const n = novaPagina()
+        pg = n.p
+        yy = n.y
+        if (!l.repetir) for (const c of cabecalho) {
+          linhaTabela(pg, x, yy, c.h, c.cels, tamanhoBase)
+          yy += c.h
+        }
+      }
+      linhaTabela(pg, x, yy, l.h, l.cels, tamanhoBase)
+      yy += l.h
+      if (!l.repetir && cabecalho.length && l.h > 0 && l.cels.every((c) => c.semBorda)) cabecalho = []
+    }
+    return { p: pg, y: yy }
+  }
+}
