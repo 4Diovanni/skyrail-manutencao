@@ -11,6 +11,13 @@
     Referrer-Policy = "same-origin"
     Permissions-Policy = "geolocation=(), microphone=()"
 
+# Arquivo de versão antiga que não existe mais: responde 404 em vez de devolver
+# o index.html (que o navegador recusaria como módulo e o service worker poderia guardar).
+[[redirects]]
+  from = "/assets/*"
+  to = "/index.html"
+  status = 404
+
 [[redirects]]
   from = "/*"
   to = "/index.html"

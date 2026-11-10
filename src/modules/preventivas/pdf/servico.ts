@@ -1,4 +1,5 @@
 import { supabase } from '../../../lib/supabase'
+import { importarModulo } from '../../../lib/versaoNova'
 import { listarPessoas } from '../../relatorio/data/remoto'
 import { chaveStorage } from '../../relatorio/pdf/caminho'
 import { prevDb } from '../data/local'
@@ -51,10 +52,10 @@ export async function gerarEGuardarPreventiva(id: string, tipo: TipoDocPrev) {
   const d = await montarDadosPreventiva(id)
   const gerador =
     tipo === 'relatorio'
-      ? (await import('./relatorio')).gerarRelatorio
+      ? (await importarModulo(() => import('./relatorio'))).gerarRelatorio
       : tipo === 'roteiro'
-        ? (await import('./roteiro')).gerarRoteiro
-        : (await import('./registro')).gerarRegistro
+        ? (await importarModulo(() => import('./roteiro'))).gerarRoteiro
+        : (await importarModulo(() => import('./registro'))).gerarRegistro
   const bytes = await gerador(d)
   const blob = new Blob([bytes as BlobPart], { type: 'application/pdf' })
   const { nome, caminho } = caminhoPreventiva(d.preventiva, d.modelo, tipo)

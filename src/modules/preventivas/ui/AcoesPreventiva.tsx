@@ -6,6 +6,7 @@ import { papeisDe } from '../../relatorio/domain/assinatura'
 import { assinarPreventiva } from '../data/assinaturas'
 import type { Preventiva } from '../domain/preventiva'
 import type { TipoDocPrev } from '../pdf/caminho'
+import { importarModulo } from '../../../lib/versaoNova'
 
 const BOTOES: [TipoDocPrev, string][] = [
   ['relatorio', 'Relatório'],
@@ -23,8 +24,8 @@ export function AcoesPreventiva({ p, nome }: { p: Preventiva & { equipe: string[
   async function pdf(tipo: TipoDocPrev) {
     setOcupado('Gerando PDF…')
     try {
-      const { gerarEGuardarPreventiva } = await import('../pdf/servico')
-      const { entregarPdf } = await import('../../relatorio/pdf/servico')
+      const { gerarEGuardarPreventiva } = await importarModulo(() => import('../pdf/servico'))
+      const { entregarPdf } = await importarModulo(() => import('../../relatorio/pdf/servico'))
       const r = await gerarEGuardarPreventiva(p.id, tipo)
       setOcupado(null)
       if (!r.guardado) alert('O PDF foi gerado, mas não foi possível guardar no servidor. Ele será entregue só neste aparelho.')
