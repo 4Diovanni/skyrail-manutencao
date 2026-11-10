@@ -105,6 +105,27 @@ function PassagemTurno({ data, turno, escolher }: { data: string; turno: Turno; 
     }
   }
 
+  async function pdf() {
+    if (!servidor) {
+      alert('Envie a passagem antes de gerar o PDF.')
+      return
+    }
+    if (local) {
+      alert('Há alterações neste aparelho que ainda não foram enviadas. Envie a passagem para o PDF sair com elas.')
+      return
+    }
+    setMsg('Gerando PDF…')
+    try {
+      const { gerarEGuardarPassagem } = await import('../pdf/servico')
+      const { entregarPdf } = await import('../../relatorio/pdf/servico')
+      const res = await gerarEGuardarPassagem(data, turno)
+      setMsg(res.guardado ? 'PDF gerado e guardado em Documentos.' : 'PDF gerado, mas não foi possível guardar no servidor. Ele fica só neste aparelho.')
+      await entregarPdf(res.blob, res.nome)
+    } catch (e) {
+      setMsg(`Erro ao gerar o PDF: ${(e as Error).message}`)
+    }
+  }
+
   async function copiarEmail() {
     if (!r || !itens) return
     const t = textoEmail(r, itens)
@@ -199,11 +220,14 @@ function PassagemTurno({ data, turno, escolher }: { data: string; turno: Turno; 
           </section>
           {msg && <p className="aviso" role="status">{msg}</p>}
           <div className="barra pass-barra">
-            <button type="button" className="secundario" onClick={() => void copiarEmail()} disabled={!itens}>
-              Copiar e-mail
+            <button type="button" className="secundario" onClick={() => void copiarEmail()} disabled={!itens} aria-label="Copiar texto do e-mail">
+              E-mail
+            </button>
+            <button type="button" className="secundario" onClick={() => void pdf()} aria-label="Gerar PDF da passagem">
+              PDF
             </button>
             <button type="button" onClick={() => void enviar()} disabled={enviando}>
-              {enviando ? 'Enviando…' : 'Enviar passagem'}
+              {enviando ? 'Enviando…' : 'Enviar'}
             </button>
           </div>
         </>
