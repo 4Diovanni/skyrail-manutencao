@@ -7,6 +7,7 @@ import { listarPreventivas } from '../data/remoto'
 import type { ModeloChecklist } from '../domain/modelo'
 import type { Preventiva, RascunhoPreventiva } from '../domain/preventiva'
 import { progresso } from '../domain/respostas'
+import { AcoesPreventiva } from './AcoesPreventiva'
 import { dataBR, nomeModelo, useModelos } from './useModelos'
 
 const ESTADO_LOCAL: Record<string, string> = { rascunho: 'Só neste aparelho', fila: 'Na fila de envio', erro: 'Erro no envio' }
@@ -87,7 +88,12 @@ export function PreventivasPage() {
       <section>
         <h3 className="sec-titulo">Enviadas nos últimos 30 dias</h3>
         <div className="lista-prev">
-          {enviadas.map((p) => <Cartao key={p.id} p={p} modelos={modelos} />)}
+          {enviadas.map((p) => (
+            <div key={p.id} className="prev-enviada">
+              <Cartao p={p} modelos={modelos} />
+              <AcoesPreventiva p={p} nome={nomeModelo(modelos.find((m) => m.id === p.modelo_id), p.modelo_id)} />
+            </div>
+          ))}
           {!enviadas.length && <p className="hint">Nenhuma preventiva enviada neste período.</p>}
         </div>
       </section>

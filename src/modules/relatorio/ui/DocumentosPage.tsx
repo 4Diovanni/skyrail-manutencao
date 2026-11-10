@@ -3,7 +3,7 @@ import { supabase } from '../../../lib/supabase'
 
 interface Documento {
   id: string
-  tipo: 'relatorio' | 'os' | 'rm' | 'passagem'
+  tipo: 'relatorio' | 'os' | 'rm' | 'roteiro' | 'passagem'
   categoria: string | null
   data: string
   turno: string
@@ -13,7 +13,7 @@ interface Documento {
   gerado_em: string
 }
 
-const ROTULO = { relatorio: 'Relatório', os: 'OS', rm: 'Registro de manutenção', passagem: 'Passagem de turno' }
+const ROTULO = { relatorio: 'Relatório', os: 'OS', rm: 'Registro de manutenção', roteiro: 'Roteiro', passagem: 'Passagem de turno' }
 
 /** PDFs guardados no servidor. Supervisor e admin veem todos; o técnico vê os que gerou (regra do banco). */
 export function DocumentosPage() {

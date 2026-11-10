@@ -130,6 +130,13 @@ label.botao.sec { background: var(--bg); color: var(--fg); border: 1px solid var
 .prev-item { display: grid; gap: 6px; color: inherit; text-decoration: none; margin: 0; }
 .prev-item-topo { display: flex; justify-content: space-between; gap: 8px; align-items: center; }
 .prev-item small { color: var(--muted); }
+.prev-enviada { display: grid; gap: 0; min-width: 0; }
+.prev-enviada .prev-item { border-bottom-left-radius: 0; border-bottom-right-radius: 0; border-bottom: 0; }
+.acoes-prev { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; padding: 8px 10px 10px; background: var(--card); border: 1px solid var(--border); border-top: 1px dashed var(--border); border-radius: 0 0 12px 12px; }
+.acoes-prev button { min-height: 44px; padding: 6px 4px; font-size: .9rem; }
+.acoes-prev button:last-child:nth-child(4) { grid-column: 1 / -1; }
+.acoes-prev .secundario { background: var(--bg); color: var(--fg); border: 1px solid var(--border); }
+.acoes-prev-status { margin: 0; padding: 12px; background: var(--card); border: 1px solid var(--border); border-top: 1px dashed var(--border); border-radius: 0 0 12px 12px; text-align: center; }
 .st-ok { color: #15803d; } .st-nok { color: #dc2626; } .st-and { color: #b45309; }
 .local-erro { color: #dc2626; }
 .progresso { position: relative; height: 22px; background: var(--bg); border: 1px solid var(--border); border-radius: 11px; overflow: hidden; }
