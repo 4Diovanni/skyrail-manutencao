@@ -234,7 +234,7 @@ export async function gerarRelatorio(d: DadosDocumento): Promise<Uint8Array> {
       blocoTexto(fl, nc.map((texto) => ({ texto: `- ${texto}` })), COR.vermelho)
     }
   } else {
-    secao(fl, 'Diagnóstico, intervenção e resultado')
+    secao(fl, 'Diagnóstico e intervenção')
     const pars = (
       [
         ['Diagnóstico', a.diagnostico],
