@@ -36,6 +36,8 @@ export function AppLayout() {
           <NavLink to="/relatorio">Relatório</NavLink>
           <NavLink to="/preventivas">Preventivas</NavLink>
           <NavLink to="/passagem">Passagem de turno</NavLink>
+          <NavLink to="/documentos">Documentos</NavLink>
+          <NavLink to="/perfil/assinatura">Minha assinatura</NavLink>
         </nav>
         <span className={`rede ${online ? 'on' : 'off'}`}>{online ? 'Online' : 'Sem internet'}</span>
         <button type="button" onClick={() => supabase.auth.signOut()}>Sair</button>
