@@ -38,6 +38,15 @@ SUPABASE_URL=... SUPABASE_SERVICE_ROLE_KEY=... LOGIN_DOMAIN=l17.local \
 ```
 A `service_role` fica só na máquina do admin, nunca no repositório nem no `.env.local` do front.
 
+## Checklists das preventivas
+Os 47 checklists (itens, grupos, portas, medições, guias e ferramentas) são dados no banco, na tabela
+`checklist_modelos`. O pacote inicial, convertido do app antigo, fica em `supabase/seed/checklists.json`.
+Depois de aplicar a migração `0004_preventivas.sql`, importe com:
+```bash
+SUPABASE_URL=... SUPABASE_SERVICE_ROLE_KEY=... npm run importar-checklists
+```
+Pode rodar de novo: atualiza pelo id, e a versão do modelo sobe se o conteúdo mudar.
+
 ## Segurança
 - Login obrigatório: todas as rotas passam por `RequireAuth`.
 - RLS ativo em todas as tabelas; perfis `tecnico`, `supervisor`, `admin`.
