@@ -7,6 +7,7 @@ import { localDb } from '../data/local'
 import { excluirAtividade, listarAtividades } from '../data/remoto'
 import { duracaoEtapa, formatarMinutos } from '../domain/tempos'
 import type { Atividade, Categoria, RascunhoAtividade } from '../domain/tipos'
+import { AcoesAtividade } from './AcoesAtividade'
 import { nomePessoa, useReferencias } from './useReferencias'
 
 const hoje = () => {
@@ -105,6 +106,7 @@ export function DiaPage() {
                     {estadoLocal === 'fila' && <em className="tag">Na fila de envio</em>}
                     {estadoLocal === 'erro' && <em className="tag erro">Erro no envio</em>}
                   </Link>
+                  {enviada && !estadoLocal && 'versao' in a && <AcoesAtividade a={a} numero={i + 1} />}
                   {enviada && !estadoLocal && (
                     <button type="button" className="mini perigo" aria-label="Excluir" onClick={() => void excluir(a.id)}>🗑</button>
                   )}
