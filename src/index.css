@@ -88,3 +88,9 @@ textarea { resize: vertical; }
 .rede { font-size: .8rem; font-weight: 700; }
 .rede.off { color: #dc2626; }
 .form-atividade h2 { font-size: 1.1rem; }
+.acoes-atividade { display: flex; flex-direction: column; gap: 4px; }
+.num.pdf { background: #b3261e; font-size: .7rem; }
+.quebra { word-break: break-all; }
+.quadro-assinatura { width: 100%; max-width: 600px; aspect-ratio: 600 / 220; background: #fff; border: 2px dashed var(--border); border-radius: 10px; touch-action: none; display: block; margin: 8px 0; }
+.assinatura-atual { display: block; max-width: 300px; width: 100%; background: #fff; border-radius: 8px; margin-top: 8px; }
+label.botao.sec { background: var(--bg); color: var(--fg); border: 1px solid var(--border); text-align: center; cursor: pointer; font-weight: 600; }
