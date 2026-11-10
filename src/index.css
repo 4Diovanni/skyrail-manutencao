@@ -21,10 +21,38 @@ input, button { font: inherit; padding: 10px 12px; border-radius: 8px; border: 1
 button { background: var(--accent); color: #fff; border: none; cursor: pointer; }
 button:disabled { opacity: .6; }
 .error { color: #dc2626; margin: 0; }
-.layout header { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--border); background: var(--card); }
-.layout nav { display: flex; gap: 12px; flex: 1; flex-wrap: wrap; }
-.layout nav a { color: var(--muted); text-decoration: none; }
-.layout nav a.active { color: var(--accent); font-weight: 600; }
+/* Cabeçalho: no celular, marca + status + botão de menu; os links abrem num painel. No PC, tudo numa linha. */
+.layout .topo { position: sticky; top: 0; z-index: 20; display: flex; align-items: center; gap: 10px; min-height: 56px; padding: 6px 8px 6px 16px; border-bottom: 1px solid var(--border); background: var(--card); }
+.marca { font-size: 1.05rem; margin-right: auto; white-space: nowrap; }
+.rede { display: inline-flex; align-items: center; gap: 6px; font-size: .85rem; color: var(--muted); white-space: nowrap; }
+.rede .ponto { width: 8px; height: 8px; border-radius: 50%; background: #16a34a; }
+.rede.off { color: #dc2626; font-weight: 600; }
+.rede.off .ponto { background: #dc2626; }
+.btn-menu { width: 44px; height: 44px; padding: 0; display: grid; place-items: center; background: transparent; color: var(--fg); border-radius: 10px; }
+.btn-menu:focus-visible { outline: 2px solid var(--accent); }
+.hamburguer { position: relative; width: 22px; height: 16px; display: block; }
+.hamburguer span { position: absolute; left: 0; width: 100%; height: 2px; border-radius: 2px; background: currentColor; transition: transform .2s, opacity .2s, top .2s; }
+.hamburguer span:nth-child(1) { top: 0; }
+.hamburguer span:nth-child(2) { top: 7px; }
+.hamburguer span:nth-child(3) { top: 14px; }
+.hamburguer.x span:nth-child(1) { top: 7px; transform: rotate(45deg); }
+.hamburguer.x span:nth-child(2) { opacity: 0; }
+.hamburguer.x span:nth-child(3) { top: 7px; transform: rotate(-45deg); }
+.layout nav { display: none; position: absolute; top: 100%; left: 0; right: 0; flex-direction: column; padding: 8px; background: var(--card); border-bottom: 1px solid var(--border); box-shadow: 0 12px 24px rgb(0 0 0 / .25); }
+.layout nav.aberto { display: flex; }
+.layout nav a { display: flex; align-items: center; min-height: 48px; padding: 0 14px; border-radius: 10px; color: var(--fg); text-decoration: none; font-size: 1.05rem; }
+.layout nav a.active { color: var(--accent); font-weight: 600; background: color-mix(in srgb, var(--accent) 14%, transparent); }
+.layout nav .btn-sair { margin-top: 8px; min-height: 48px; font-size: 1rem; }
+.menu-fundo { position: fixed; inset: 0; z-index: 10; background: rgb(0 0 0 / .4); }
+@media (min-width: 900px) {
+  .layout .topo { padding: 8px 16px; gap: 16px; }
+  .marca { margin-right: 8px; }
+  .btn-menu, .menu-fundo { display: none; }
+  .layout nav, .layout nav.aberto { display: contents; }
+  .layout nav a { order: 1; min-height: 40px; padding: 0 12px; font-size: .95rem; color: var(--muted); }
+  .rede { order: 2; margin-left: auto; }
+  .layout nav .btn-sair { order: 3; margin: 0; min-height: 40px; }
+}
 .layout main { padding: 16px; }
 .hint { color: var(--muted); font-size: .9rem; }
 
@@ -85,8 +113,6 @@ textarea { resize: vertical; }
 .atividade small { color: var(--muted); }
 .tag { font-style: normal; font-size: .75rem; font-weight: 700; color: #1f5c7a; }
 .tag.erro { color: #dc2626; }
-.rede { font-size: .8rem; font-weight: 700; }
-.rede.off { color: #dc2626; }
 .form-atividade h2 { font-size: 1.1rem; }
 .acoes-atividade { display: flex; flex-direction: column; gap: 4px; }
 .num.pdf { background: #b3261e; font-size: .7rem; }
