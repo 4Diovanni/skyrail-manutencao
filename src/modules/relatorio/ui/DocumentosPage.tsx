@@ -15,7 +15,7 @@ interface Documento {
 
 const ROTULO = { relatorio: 'Relatório', os: 'OS', rm: 'Registro de manutenção', roteiro: 'Roteiro', passagem: 'Passagem de turno' }
 
-/** PDFs guardados no servidor. Supervisor e admin veem todos; o técnico vê os que gerou (regra do banco). */
+/** PDFs guardados no servidor. Todo usuário ativo vê os documentos de todos os turnos (regra do banco, migração 0006). */
 export function DocumentosPage() {
   const [docs, setDocs] = useState<Documento[] | null>(null)
   const [erro, setErro] = useState<string | null>(null)
