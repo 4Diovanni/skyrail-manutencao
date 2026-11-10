@@ -155,7 +155,6 @@ export function AtividadePage() {
             <Campo rotulo="Sintoma"><Texto valor={a.sintoma} onChange={(v) => set({ sintoma: v })} placeholder="Ex.: Ausência de comunicação com o SCT" /></Campo>
             <Campo rotulo="Diagnóstico"><Texto linhas={3} valor={a.diagnostico} onChange={(v) => set({ diagnostico: v })} placeholder="O que a equipe verificou e identificou." /></Campo>
             <Campo rotulo="Intervenção"><Texto linhas={3} valor={a.intervencao} onChange={(v) => set({ intervencao: v })} placeholder="Ex.: Realizado reset no ZC-B" /></Campo>
-            <Campo rotulo="Resultado (opcional)"><Texto linhas={2} valor={a.resultado} onChange={(v) => set({ resultado: v })} /></Campo>
           </>
         )}
       </section>
