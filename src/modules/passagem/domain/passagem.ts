@@ -211,7 +211,7 @@ export function textoEmail(r: RascunhoPassagem, itens: ItemTurno[]): string {
       const extra =
         (x.status === 'Não realizada' && x.motivo ? ` (${curto(x.motivo)})` : '') +
         (x.reprogPedido ? ` · reprogramar${x.reprogData ? ` p/ ${dataBR(x.reprogData)}` : ''}` : '')
-      L.push('• ' + [x.tipoPrev, curto(x.titulo), x.local].filter(Boolean).join(' ') + ` ${x.status.toLowerCase()}${extra}`)
+      L.push('• ' + [x.tipoPrev && !x.titulo.includes(x.tipoPrev) ? x.tipoPrev : null, curto(x.titulo), x.local].filter(Boolean).join(' ') + ` ${x.status.toLowerCase()}${extra}`)
     })
   else L.push('Sem preventivas no turno')
   L.push('4. OCORRÊNCIAS')
@@ -230,3 +230,16 @@ export function textoEmail(r: RascunhoPassagem, itens: ItemTurno[]): string {
   }
   return L.join('\n')
 }
+
+/** Turno em andamento: o Noturno começa às 18h e a passagem leva a data do início do turno. */
+export function turnoAtual(agora: Date): { data: string; turno: Turno } {
+  const h = agora.getHours()
+  const d = new Date(agora)
+  if (h < 6) d.setDate(d.getDate() - 1)
+  const iso = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+  return { data: iso, turno: h >= 18 || h < 6 ? 'Noturno' : 'Diurno' }
+}
+
+/** A passagem já tem algo escrito pela equipe? */
+export const temConteudo = (p: Pick<RascunhoPassagem, 'alta' | 'media' | 'baixa' | 'encerramento' | 'condicoes'>) =>
+  p.alta.length + p.media.length + p.baixa.length > 0 || !!limpo(p.encerramento) || p.condicoes.some((c) => !c.auto && limpo(c.c))
