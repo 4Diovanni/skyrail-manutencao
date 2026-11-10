@@ -240,7 +240,7 @@ button.link { background: none; color: var(--accent); padding: 4px 0; min-height
 .pass-remover { justify-self: end; min-height: 40px; padding: 6px 12px; font-size: .9rem; }
 .pass-add { width: 100%; min-height: 44px; margin-top: 4px; }
 .pass-prog-fim { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
-.pass-barra { display: grid; grid-template-columns: 1fr 1.4fr; gap: 8px; padding: 10px 0 12px; }
+.pass-barra { display: grid; grid-template-columns: 1fr 1fr 1.4fr; gap: 8px; padding: 10px 0 12px; }
 .pass-barra button { min-height: 48px; font-weight: 700; }
 @media (min-width: 760px) {
   .pass-anterior-topo { grid-template-columns: minmax(0, 1fr) auto; align-items: center; }
