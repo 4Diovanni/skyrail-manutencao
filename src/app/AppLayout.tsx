@@ -20,6 +20,14 @@ function useOnline() {
   return online
 }
 
+const LINKS: [string, string][] = [
+  ['/relatorio', 'Relatório'],
+  ['/preventivas', 'Preventivas'],
+  ['/passagem', 'Passagem de turno'],
+  ['/documentos', 'Documentos'],
+  ['/perfil/assinatura', 'Minha assinatura'],
+]
+
 export function AppLayout() {
   const online = useOnline()
   // Fila de envio: roda ao abrir o app, quando a internet volta e a cada 30 minutos.
@@ -33,20 +41,49 @@ export function AppLayout() {
     }
   }, [])
 
+  const [menuAberto, setMenuAberto] = useState(false)
+  // Fecha o menu ao escolher uma tela, ao tocar fora dele e com a tecla Esc.
+  useEffect(() => {
+    if (!menuAberto) return
+    const esc = (e: KeyboardEvent) => e.key === 'Escape' && setMenuAberto(false)
+    window.addEventListener('keydown', esc)
+    return () => window.removeEventListener('keydown', esc)
+  }, [menuAberto])
+
   return (
     <div className="layout">
-      <header>
-        <strong>SkyRail L17</strong>
-        <nav>
-          <NavLink to="/relatorio">Relatório</NavLink>
-          <NavLink to="/preventivas">Preventivas</NavLink>
-          <NavLink to="/passagem">Passagem de turno</NavLink>
-          <NavLink to="/documentos">Documentos</NavLink>
-          <NavLink to="/perfil/assinatura">Minha assinatura</NavLink>
+      <header className="topo">
+        <strong className="marca">SkyRail L17</strong>
+        <span className={`rede ${online ? 'on' : 'off'}`} role="status">
+          <span className="ponto" aria-hidden="true" />
+          {online ? 'Online' : 'Sem internet'}
+        </span>
+        <button
+          type="button"
+          className="btn-menu"
+          aria-label={menuAberto ? 'Fechar menu' : 'Abrir menu'}
+          aria-expanded={menuAberto}
+          aria-controls="menu-principal"
+          onClick={() => setMenuAberto((v) => !v)}
+        >
+          <span className={`hamburguer ${menuAberto ? 'x' : ''}`} aria-hidden="true">
+            <span />
+            <span />
+            <span />
+          </span>
+        </button>
+        <nav id="menu-principal" className={menuAberto ? 'aberto' : ''} aria-label="Menu principal">
+          {LINKS.map(([to, rotulo]) => (
+            <NavLink key={to} to={to} onClick={() => setMenuAberto(false)}>
+              {rotulo}
+            </NavLink>
+          ))}
+          <button type="button" className="btn-sair" onClick={() => supabase.auth.signOut()}>
+            Sair
+          </button>
         </nav>
-        <span className={`rede ${online ? 'on' : 'off'}`}>{online ? 'Online' : 'Sem internet'}</span>
-        <button type="button" onClick={() => supabase.auth.signOut()}>Sair</button>
       </header>
+      {menuAberto && <div className="menu-fundo" onClick={() => setMenuAberto(false)} aria-hidden="true" />}
       <main>
         <Outlet />
       </main>
