@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
 import { registrarSincronizacao, sincronizarAgora } from '../lib/sync'
+import { processarFila as filaPreventivas } from '../modules/preventivas/data/envio'
 import { processarFila } from '../modules/relatorio/data/envio'
 import { supabase } from '../lib/supabase'
 
@@ -23,9 +24,13 @@ export function AppLayout() {
   const online = useOnline()
   // Fila de envio: roda ao abrir o app, quando a internet volta e a cada 30 minutos.
   useEffect(() => {
-    const parar = registrarSincronizacao(processarFila)
+    const p1 = registrarSincronizacao(processarFila)
+    const p2 = registrarSincronizacao(filaPreventivas)
     void sincronizarAgora()
-    return parar
+    return () => {
+      p1()
+      p2()
+    }
   }, [])
 
   return (
