@@ -1,4 +1,5 @@
 import { supabase } from '../../../lib/supabase'
+import { importarModulo } from '../../../lib/versaoNova'
 import { buscarAtividade, listarPessoas } from '../data/remoto'
 import { caminhoDocumento, chaveStorage, type TipoDoc } from './caminho'
 import type { DadosDocumento } from './dados'
@@ -39,7 +40,7 @@ export async function montarDados(atividadeId: string, numero: number): Promise<
 export async function gerarEGuardar(atividadeId: string, tipo: TipoDoc, numero: number) {
   const d = await montarDados(atividadeId, numero)
   const gerador =
-    tipo === 'relatorio' ? (await import('./relatorio')).gerarRelatorio : tipo === 'os' ? (await import('./os')).gerarOS : (await import('./rm')).gerarRM
+    tipo === 'relatorio' ? (await importarModulo(() => import('./relatorio'))).gerarRelatorio : tipo === 'os' ? (await importarModulo(() => import('./os'))).gerarOS : (await importarModulo(() => import('./rm'))).gerarRM
   const bytes = await gerador(d)
   const blob = new Blob([bytes as BlobPart], { type: 'application/pdf' })
   const { nome, caminho } = caminhoDocumento(d.atividade, tipo, numero)

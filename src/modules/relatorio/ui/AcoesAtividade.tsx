@@ -6,6 +6,7 @@ import { papeisDe } from '../domain/assinatura'
 import type { Atividade } from '../domain/tipos'
 import { camposFaltando } from '../domain/validacao'
 import { atividadeParaRascunho } from '../domain/rascunho'
+import { importarModulo } from '../../../lib/versaoNova'
 
 /** Botões de uma atividade já enviada: PDF, OS/Registro e Assinar. */
 export function AcoesAtividade({ a, numero }: { a: Atividade & { equipe: string[] }; numero: number }) {
@@ -23,7 +24,7 @@ export function AcoesAtividade({ a, numero }: { a: Atividade & { equipe: string[
     }
     setOcupado('Gerando PDF…')
     try {
-      const { gerarEGuardar, entregarPdf } = await import('../pdf/servico')
+      const { gerarEGuardar, entregarPdf } = await importarModulo(() => import('../pdf/servico'))
       const r = await gerarEGuardar(a.id, tipo, numero)
       setOcupado(null)
       if (!r.guardado) alert('O PDF foi gerado, mas não foi possível guardar no servidor. Ele será entregue só neste aparelho.')
