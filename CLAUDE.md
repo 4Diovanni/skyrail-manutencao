@@ -50,3 +50,11 @@ Comandos: `npm run dev`, `npm run build`, `npm test` (Vitest), `npx oxlint src`,
 
 Branch por funcionalidade, commits pequenos e descritivos, PR para revisão do Giovanni (4Diovanni).
 Nunca commitar direto na `main`.
+
+### Prova de teste em todo PR (regra do Giovanni)
+
+- Toda mudança testada no app vem com **prints do celular (ex.: Pixel 5) e do PC (1280 px)** mostrando o efeito,
+  na descrição do PR e na conversa com o Giovanni. PDFs gerados entram como imagem da página.
+- Se o teste foi **só de código** (testes automáticos, sem abrir o app), o PR diz isso com todas as letras.
+- Diga também com que dados foi testado: Supabase real ou servidor simulado, sempre com dados fictícios.
+- As imagens dos PRs ficam na branch `prints` (pasta `pr-<número>/`), fora do código do app.
