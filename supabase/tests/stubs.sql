@@ -1,4 +1,5 @@
 -- Simula o mínimo do Supabase (auth, storage, papéis) para testar as migrações num Postgres local.
+create role authenticated nologin;
 create role anon nologin;
 create role service_role nologin;
 create schema auth; create schema storage;
