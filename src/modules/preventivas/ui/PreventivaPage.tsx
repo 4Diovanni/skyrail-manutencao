@@ -1,6 +1,7 @@
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { avisar } from '../../../lib/avisos'
 import { sincronizarAgora } from '../../../lib/sync'
 import { Campo, Opcoes, Texto } from '../../relatorio/ui/campos/Campo'
 import { EquipeCampo, PessoaSelect } from '../../relatorio/ui/campos/EquipeCampo'
@@ -87,7 +88,7 @@ export function PreventivaPage() {
     if (!p) return
     const erros = errosEnvio(p, modelo)
     if (erros.length) {
-      alert(erros.join('\n'))
+      avisar('erro', `Falta preencher: ${erros.join('; ')}`)
       return
     }
     setEnviando(true)
@@ -96,11 +97,11 @@ export function PreventivaPage() {
     const r = await processarFila()
     await sincronizarAgora()
     setEnviando(false)
-    if (r.enviados) alert('Preventiva enviada.')
-    else if (!navigator.onLine) alert('Sem internet: a preventiva ficou na fila e será enviada quando a conexão voltar.')
+    if (r.enviados) avisar('ok', 'Preventiva enviada.')
+    else if (!navigator.onLine) avisar('fila', 'Sem internet: a preventiva ficou na fila e será enviada quando a conexão voltar.')
     else {
       const item = await prevDb.rascunhos.get(p.id)
-      alert(`O servidor recusou o envio: ${item?.erro ?? 'erro desconhecido'}. A preventiva ficou salva no aparelho.`)
+      avisar('erro', `O servidor recusou o envio: ${item?.erro ?? 'erro desconhecido'}. A preventiva ficou salva no aparelho.`)
     }
     navigate('/preventivas')
   }

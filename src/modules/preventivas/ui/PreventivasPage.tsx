@@ -1,6 +1,7 @@
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { avisarFila } from '../../../lib/avisos'
 import { processarFila } from '../data/envio'
 import { prevDb } from '../data/local'
 import { listarPreventivas } from '../data/remoto'
@@ -74,7 +75,7 @@ export function PreventivasPage() {
       {pendentesFila > 0 && (
         <p className="aviso">
           {pendentesFila} preventiva(s) aguardando envio.{' '}
-          <button type="button" className="mini" onClick={() => void processarFila().then(() => setRecarga((n) => n + 1))}>Enviar agora</button>
+          <button type="button" className="mini" onClick={() => void processarFila().then((r) => { avisarFila(r, 'Preventivas'); setRecarga((n) => n + 1) })}>Enviar agora</button>
         </p>
       )}
       {locais.length > 0 && (

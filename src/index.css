@@ -250,3 +250,12 @@ button.link { background: none; color: var(--accent); padding: 4px 0; min-height
   .pass-prog { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) auto; align-items: center; }
   .pass-prog .row { grid-template-columns: 1fr 1fr; }
 }
+
+/* ===== avisos de envio ===== */
+.avisos { position: sticky; top: 56px; z-index: 15; display: grid; gap: 6px; padding: 8px 16px 0; }
+.aviso-envio { display: flex; align-items: flex-start; gap: 8px; padding: 10px 6px 10px 12px; border-radius: 10px; border: 1px solid; font-size: .95rem; box-shadow: 0 2px 8px rgba(0, 0, 0, .12); }
+.aviso-envio span { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.aviso-envio button { flex: none; width: 40px; height: 40px; padding: 0; margin: -6px 0; font-size: 1.4rem; line-height: 1; background: transparent; color: inherit; border-radius: 8px; }
+.aviso-envio.ok { background: #e6f6ea; color: #14532d; border-color: #16a34a; }
+.aviso-envio.fila { background: #fff7e0; color: #5a4300; border-color: #e0a100; }
+.aviso-envio.erro { background: #fde8e8; color: #7a1a14; border-color: #dc2626; }

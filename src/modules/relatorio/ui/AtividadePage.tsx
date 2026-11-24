@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { avisar } from '../../../lib/avisos'
 import { sincronizarAgora } from '../../../lib/sync'
 import { processarFila } from '../data/envio'
 import { descartarRascunho, localDb, salvarRascunho } from '../data/local'
@@ -86,7 +87,7 @@ export function AtividadePage() {
     if (!a) return
     const erros = errosEnvio(a)
     if (erros.length) {
-      alert(erros.join('\n'))
+      avisar('erro', `Falta preencher: ${erros.join('; ')}`)
       return
     }
     setEnviando(true)
@@ -95,11 +96,11 @@ export function AtividadePage() {
     const r = await processarFila()
     await sincronizarAgora()
     setEnviando(false)
-    if (r.enviados) alert('Atividade enviada.')
-    else if (!navigator.onLine) alert('Sem internet: a atividade ficou na fila e será enviada quando a conexão voltar.')
+    if (r.enviados) avisar('ok', 'Atividade enviada.')
+    else if (!navigator.onLine) avisar('fila', 'Sem internet: a atividade ficou na fila e será enviada quando a conexão voltar.')
     else {
       const item = await localDb.rascunhos.get(a.id)
-      alert(`O servidor recusou o envio: ${item?.erro ?? 'erro desconhecido'}. A atividade ficou salva no aparelho.`)
+      avisar('erro', `O servidor recusou o envio: ${item?.erro ?? 'erro desconhecido'}. A atividade ficou salva no aparelho.`)
     }
     navigate(`/relatorio?data=${a.data}&cat=${a.categoria}`)
   }

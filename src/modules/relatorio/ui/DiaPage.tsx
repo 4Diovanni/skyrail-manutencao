@@ -2,6 +2,7 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import { useEffect, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../../../auth/AuthContext'
+import { avisarFila } from '../../../lib/avisos'
 import { processarFila } from '../data/envio'
 import { localDb } from '../data/local'
 import { excluirAtividade, listarAtividades } from '../data/remoto'
@@ -45,7 +46,7 @@ export function DiaPage() {
   const proxOrdem = linhas.length ? Math.max(...linhas.map((l) => l.a.ordem)) + 1 : 1
 
   async function enviarFila() {
-    await processarFila()
+    avisarFila(await processarFila(), 'Relatório')
     setRecarga((n) => n + 1)
   }
 
