@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import type { Turno } from '../../../domain/turno'
 import { formatarMinutos } from '../../relatorio/domain/tempos'
+import { avisar } from '../../../lib/avisos'
 import { enviarPassagem, versaoNoServidor } from '../data/envio'
 import { chavePassagem, descartarLocal, passDb, salvarLocal } from '../data/local'
 import { buscarPassagem, itensDoTurno, passagemAnterior } from '../data/remoto'
@@ -91,14 +92,14 @@ function PassagemTurno({ data, turno, escolher }: { data: string; turno: Turno; 
       if (res.ok) {
         await descartarLocal(r.data, r.turno)
         setEditado(null)
-        setMsg(`Passagem enviada (versão ${res.versao}).`)
+        avisar('ok', `Passagem enviada (versão ${res.versao}).`)
         setRecarga((n) => n + 1)
       } else if (res.offline) {
         await salvarLocal(r, 'fila')
-        setMsg('Sem internet: a passagem fica na fila e é enviada quando a conexão voltar.')
+        avisar('fila', 'Sem internet: a passagem ficou na fila e será enviada quando a conexão voltar.')
       } else {
         await salvarLocal(r, 'erro', res.mensagem)
-        setMsg(`O servidor recusou o envio: ${res.mensagem}`)
+        avisar('erro', `O servidor recusou o envio: ${res.mensagem}. A passagem ficou salva no aparelho.`)
       }
     } finally {
       setEnviando(false)
@@ -107,11 +108,11 @@ function PassagemTurno({ data, turno, escolher }: { data: string; turno: Turno; 
 
   async function pdf() {
     if (!servidor) {
-      alert('Envie a passagem antes de gerar o PDF.')
+      avisar('erro', 'Envie a passagem antes de gerar o PDF.')
       return
     }
     if (local) {
-      alert('Há alterações neste aparelho que ainda não foram enviadas. Envie a passagem para o PDF sair com elas.')
+      avisar('erro', 'Há alterações neste aparelho que ainda não foram enviadas. Envie a passagem para o PDF sair com elas.')
       return
     }
     setMsg('Gerando PDF…')

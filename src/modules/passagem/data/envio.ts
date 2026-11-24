@@ -1,3 +1,4 @@
+import type { ResultadoFila } from '../../../lib/avisos'
 import { supabase } from '../../../lib/supabase'
 import { rascunhoParaLinha } from '../domain/passagem'
 import type { RascunhoPassagem } from '../domain/tipos'
@@ -31,11 +32,19 @@ export async function versaoNoServidor(r: RascunhoPassagem): Promise<number | nu
 }
 
 /** Fila: envia as passagens que ficaram esperando internet. */
-export async function processarFilaPassagem() {
+export async function processarFilaPassagem(): Promise<ResultadoFila> {
   const fila = await passDb.rascunhos.where('estado').equals('fila').toArray()
+  let enviados = 0
+  const erros: string[] = []
   for (const l of fila) {
     const r = await enviarPassagem(l.dados)
-    if (r.ok) await passDb.rascunhos.delete(l.chave)
-    else if (!r.offline) await salvarLocal(l.dados, 'erro', r.mensagem)
+    if (r.ok) {
+      await passDb.rascunhos.delete(l.chave)
+      enviados++
+    } else if (!r.offline) {
+      await salvarLocal(l.dados, 'erro', r.mensagem)
+      erros.push(r.mensagem)
+    }
   }
+  return { enviados, pendentes: fila.length - enviados, erros }
 }
