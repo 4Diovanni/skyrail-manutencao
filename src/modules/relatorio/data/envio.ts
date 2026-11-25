@@ -1,7 +1,7 @@
 import type { ResultadoFila } from '../../../lib/avisos'
 import { supabase } from '../../../lib/supabase'
 import { rascunhoParaLinha } from '../domain/rascunho'
-import { localDb, type RascunhoLocal } from './local'
+import { localDb, minhaFila, type RascunhoLocal } from './local'
 
 export type ResultadoEnvio =
   | { ok: true; versao: number; sobrescreveu: boolean }
@@ -75,7 +75,8 @@ async function enviarFotos(atividadeId: string) {
 
 /** Processa a fila: tudo que está em "fila" ou "erro" é reenviado. */
 export async function processarFila(): Promise<ResultadoFila> {
-  const itens = await localDb.rascunhos.where('estado').anyOf('fila', 'erro').toArray()
+  // Só a fila de quem está logado: o envio usa a sessão dessa pessoa.
+  const itens = await minhaFila().toArray()
   let enviados = 0
   const erros: string[] = []
   for (const item of itens) {

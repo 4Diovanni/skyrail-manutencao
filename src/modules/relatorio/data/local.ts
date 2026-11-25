@@ -1,4 +1,5 @@
 import Dexie, { type EntityTable } from 'dexie'
+import { donoLocal, ehDoDono, semDono } from '../../../lib/donoLocal'
 import type { RascunhoAtividade } from '../domain/tipos'
 
 /** rascunho: só no aparelho · fila: tocou em Enviar, aguardando rede · erro: o servidor recusou */
@@ -6,6 +7,8 @@ export type EstadoLocal = 'rascunho' | 'fila' | 'erro'
 
 export interface RascunhoLocal {
   id: string
+  /** Quem fez o rascunho neste aparelho (ver lib/donoLocal). */
+  userId?: string
   data: string
   estado: EstadoLocal
   erro?: string
@@ -39,13 +42,37 @@ class RelatorioDb extends Dexie {
   constructor() {
     super('skyrail-relatorio')
     this.version(1).stores({ rascunhos: 'id, data, estado', fotos: 'id, atividadeId', cache: 'chave' })
+    this.version(2).stores({ rascunhos: 'id, data, estado, userId' })
   }
 }
 
 export const localDb = new RelatorioDb()
 
 export async function salvarRascunho(dados: RascunhoAtividade, estado: EstadoLocal = 'rascunho') {
-  await localDb.rascunhos.put({ id: dados.id, data: dados.data, estado, atualizadoEm: new Date().toISOString(), dados })
+  const userId = donoLocal()
+  if (!userId) throw new Error('Sem usuário logado: o rascunho não foi salvo.')
+  await localDb.rascunhos.put({ id: dados.id, userId, data: dados.data, estado, atualizadoEm: new Date().toISOString(), dados })
+}
+
+/** Rascunho deste id, só se for da pessoa logada. */
+export async function meuRascunho(id: string): Promise<RascunhoLocal | undefined> {
+  const r = await localDb.rascunhos.get(id)
+  return r && ehDoDono(r) ? r : undefined
+}
+
+/** Rascunhos da pessoa logada (opcionalmente de um dia). */
+export function meusRascunhos(data?: string) {
+  const col = data ? localDb.rascunhos.where('data').equals(data) : localDb.rascunhos.toCollection()
+  return col.filter((r) => ehDoDono(r))
+}
+
+/** Fila (enviar ou com erro) da pessoa logada. */
+export function minhaFila() {
+  return localDb.rascunhos.where('estado').anyOf('fila', 'erro').filter((r) => ehDoDono(r))
+}
+
+export async function adotarSemDono(userId: string) {
+  await localDb.rascunhos.filter(semDono).modify({ userId })
 }
 
 export async function descartarRascunho(id: string) {

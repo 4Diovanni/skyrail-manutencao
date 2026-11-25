@@ -5,7 +5,8 @@ import type { Turno } from '../../../domain/turno'
 import { formatarMinutos } from '../../relatorio/domain/tempos'
 import { avisar } from '../../../lib/avisos'
 import { enviarPassagem, versaoNoServidor } from '../data/envio'
-import { chavePassagem, descartarLocal, passDb, salvarLocal } from '../data/local'
+import { useAuth } from '../../../auth/AuthContext'
+import { chavePassagem, descartarLocal, minhaPassagem, salvarLocal } from '../data/local'
 import { buscarPassagem, itensDoTurno, passagemAnterior } from '../data/remoto'
 import {
   aplicarAutomatico,
@@ -36,7 +37,8 @@ export function PassagemPage() {
 function PassagemTurno({ data, turno, escolher }: { data: string; turno: Turno; escolher: (data: string, turno: Turno) => void }) {
   const chave = chavePassagem(data, turno)
   // null = nada salvo no aparelho; undefined = ainda lendo.
-  const local = useLiveQuery(async () => (await passDb.rascunhos.get(chave)) ?? null, [chave])
+  const uid = useAuth().session?.user.id
+  const local = useLiveQuery(() => minhaPassagem(data, turno), [chave, uid])
   const [servidor, setServidor] = useState<Passagem | null | undefined>(undefined)
   const [anterior, setAnterior] = useState<Passagem | null>(null)
   const [itens, setItens] = useState<ItemTurno[] | null>(null)
