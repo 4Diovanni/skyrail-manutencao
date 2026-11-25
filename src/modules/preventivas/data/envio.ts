@@ -1,7 +1,7 @@
 import type { ResultadoFila } from '../../../lib/avisos'
 import { supabase } from '../../../lib/supabase'
 import { rascunhoParaLinha } from '../domain/preventiva'
-import { prevDb, type RascunhoLocal } from './local'
+import { minhaFila, prevDb, type RascunhoLocal } from './local'
 
 export type ResultadoEnvio = { ok: true; versao: number } | { ok: false; offline: boolean; mensagem: string }
 
@@ -71,7 +71,8 @@ async function enviarFotos(preventivaId: string, ocorrencias: Set<string>) {
 
 /** Processa a fila: tudo que está em "fila" ou "erro" é reenviado. */
 export async function processarFila(): Promise<ResultadoFila> {
-  const itens = await prevDb.rascunhos.where('estado').anyOf('fila', 'erro').toArray()
+  // Só a fila de quem está logado: o envio usa a sessão dessa pessoa.
+  const itens = await minhaFila().toArray()
   let enviados = 0
   const erros: string[] = []
   for (const item of itens) {
