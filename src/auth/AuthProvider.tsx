@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState, type ReactNode } from 'react'
 import type { Session } from '@supabase/supabase-js'
+import { definirDonoLocal } from '../lib/donoLocal'
 import { supabase } from '../lib/supabase'
 import { AuthContext } from './AuthContext'
 import type { PerfilUsuario } from './types'
@@ -19,6 +20,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true)
 
   const carregar = useCallback(async (s: Session | null) => {
+    // Rascunhos e fila do aparelho passam a ser os desta pessoa (ou de ninguém, ao sair).
+    definirDonoLocal(s?.user.id ?? null)
     setSession(s)
     setPerfil(s ? await buscarPerfil(s.user.id) : null)
     setLoading(false)

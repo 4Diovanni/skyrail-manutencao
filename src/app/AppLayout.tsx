@@ -5,7 +5,8 @@ import { registrarSincronizacao, sincronizarAgora } from '../lib/sync'
 import { processarFilaPassagem } from '../modules/passagem/data/envio'
 import { processarFila as filaPreventivas } from '../modules/preventivas/data/envio'
 import { processarFila } from '../modules/relatorio/data/envio'
-import { supabase } from '../lib/supabase'
+import { useAuth } from '../auth/AuthContext'
+import { adotarRascunhosAntigos, sairComAviso } from './sair'
 
 function useOnline() {
   const [online, setOnline] = useState(() => navigator.onLine)
@@ -32,18 +33,21 @@ const LINKS: [string, string][] = [
 
 export function AppLayout() {
   const online = useOnline()
+  const uid = useAuth().session?.user.id
   // Fila de envio: roda ao abrir o app, quando a internet volta e a cada 30 minutos.
   useEffect(() => {
+    if (!uid) return
     const p1 = registrarSincronizacao({ rotulo: 'Relatório', executar: processarFila })
     const p2 = registrarSincronizacao({ rotulo: 'Preventivas', executar: filaPreventivas })
     const p3 = registrarSincronizacao({ rotulo: 'Passagem de turno', executar: processarFilaPassagem })
-    void sincronizarAgora()
+    // Rascunhos de antes da separação por pessoa ficam com quem entrou; depois a fila roda.
+    void adotarRascunhosAntigos(uid).finally(() => void sincronizarAgora())
     return () => {
       p1()
       p2()
       p3()
     }
-  }, [])
+  }, [uid])
 
   const [menuAberto, setMenuAberto] = useState(false)
   // Fecha o menu ao escolher uma tela, ao tocar fora dele e com a tecla Esc.
@@ -82,7 +86,7 @@ export function AppLayout() {
               {rotulo}
             </NavLink>
           ))}
-          <button type="button" className="btn-sair" onClick={() => supabase.auth.signOut()}>
+          <button type="button" className="btn-sair" onClick={() => void sairComAviso()}>
             Sair
           </button>
         </nav>

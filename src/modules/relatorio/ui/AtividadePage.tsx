@@ -3,7 +3,7 @@ import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { avisar } from '../../../lib/avisos'
 import { sincronizarAgora } from '../../../lib/sync'
 import { processarFila } from '../data/envio'
-import { descartarRascunho, localDb, salvarRascunho } from '../data/local'
+import { descartarRascunho, localDb, meuRascunho, salvarRascunho } from '../data/local'
 import { buscarAtividade } from '../data/remoto'
 import { atividadeParaRascunho, novoRascunho } from '../domain/rascunho'
 import { TIPOS_PREV, type Categoria, type RascunhoAtividade } from '../domain/tipos'
@@ -21,7 +21,7 @@ import { useReferencias } from './useReferencias'
 /** Carrega o rascunho local; se não houver, parte da versão do servidor; senão, cria um novo. */
 async function carregar(id: string | undefined, data: string, categoria: Categoria, ordem: number): Promise<RascunhoAtividade> {
   if (id) {
-    const local = await localDb.rascunhos.get(id)
+    const local = await meuRascunho(id)
     if (local) return local.dados
     const remoto = await buscarAtividade(id)
     if (remoto) {

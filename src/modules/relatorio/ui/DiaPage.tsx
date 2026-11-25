@@ -4,7 +4,7 @@ import { Link, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../../../auth/AuthContext'
 import { avisarFila } from '../../../lib/avisos'
 import { processarFila } from '../data/envio'
-import { localDb } from '../data/local'
+import { meusRascunhos, minhaFila } from '../data/local'
 import { excluirAtividade, listarAtividades } from '../data/remoto'
 import { duracaoEtapa, formatarMinutos } from '../domain/tempos'
 import type { Atividade, Categoria, RascunhoAtividade } from '../domain/tipos'
@@ -20,15 +20,16 @@ type Linha = { a: RascunhoAtividade | (Atividade & { equipe: string[] }); estado
 
 export function DiaPage() {
   const [qs, setQs] = useSearchParams()
-  const { perfil } = useAuth()
+  const { perfil, session } = useAuth()
+  const uid = session?.user.id
   const ref = useReferencias()
   const data = qs.get('data') ?? hoje()
   const cat = (qs.get('cat') as Categoria) ?? 'Corretiva'
   const [remotas, setRemotas] = useState<(Atividade & { equipe: string[] })[]>([])
   const [semRede, setSemRede] = useState(false)
   const [recarga, setRecarga] = useState(0)
-  const locais = useLiveQuery(() => localDb.rascunhos.where('data').equals(data).toArray(), [data]) ?? []
-  const fila = useLiveQuery(() => localDb.rascunhos.where('estado').anyOf('fila', 'erro').count(), []) ?? 0
+  const locais = useLiveQuery(() => meusRascunhos(data).toArray(), [data, uid]) ?? []
+  const fila = useLiveQuery(() => minhaFila().count(), [uid]) ?? 0
 
   useEffect(() => {
     listarAtividades(data)
