@@ -117,3 +117,10 @@ npm run importar-checklists
 ```
 
 Pode rodar de novo: atualiza pelo id, e a versão do modelo sobe se o conteúdo mudar.
+
+## Encontrou um erro?
+
+Anote o que fez e tire um print da tela (sem senhas nem dados de outras pessoas). Envie pelo modelo
+**Relatório de erro** do Anexo III: no GitHub, em *Issues → New issue → Relatório de erro (Anexo III)*,
+ou copiando o modelo do contrato no canal oficial. Informe a **versão do app**, que aparece em Meu perfil
+e na tela de login.

@@ -1,0 +1,93 @@
+name: Relatório de erro (Anexo III)
+description: Algo no app não funciona como deveria. Mesmo modelo do Anexo III do contrato.
+title: "Erro: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Preencha o que souber e anexe **pelo menos um print ou vídeo curto** da tela.
+        **Não envie senhas, chaves ou dados pessoais de outras pessoas no print.**
+        O retorno sai em até 2 dias úteis, com a gravidade confirmada e se é erro (correção sem custo) ou pedido novo.
+  - type: input
+    id: quando
+    attributes:
+      label: Data e hora
+      placeholder: "dd/mm/aaaa hh:mm"
+    validations:
+      required: true
+  - type: dropdown
+    id: quem
+    attributes:
+      label: Quem encontrou (perfil)
+      options: [Técnico, Supervisor, Admin]
+    validations:
+      required: true
+  - type: input
+    id: aparelho
+    attributes:
+      label: Aparelho e navegador
+      placeholder: "ex.: Android 14, Chrome"
+    validations:
+      required: true
+  - type: dropdown
+    id: internet
+    attributes:
+      label: Com ou sem internet
+      options: [Com internet, Sem internet, Não sei]
+    validations:
+      required: true
+  - type: dropdown
+    id: tela
+    attributes:
+      label: Tela
+      options: [Relatório, Preventivas, Passagem de turno, Documentos, Login, Meu perfil / Minha assinatura, Política de uso, Outra]
+    validations:
+      required: true
+  - type: input
+    id: versao
+    attributes:
+      label: Versão do app
+      description: Aparece em Meu perfil e na tela de login.
+      placeholder: "ex.: 0.2.0"
+  - type: textarea
+    id: passos
+    attributes:
+      label: O que eu fiz (passo a passo)
+      value: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+  - type: textarea
+    id: esperado
+    attributes:
+      label: O que eu esperava
+    validations:
+      required: true
+  - type: textarea
+    id: aconteceu
+    attributes:
+      label: O que aconteceu
+    validations:
+      required: true
+  - type: dropdown
+    id: gravidade
+    attributes:
+      label: Gravidade sugerida
+      description: |
+        Crítica: o app não abre, não faz login ou perde dados (correção em até 2 dias úteis).
+        Alta: uma função principal não funciona, como enviar relatório, gerar PDF ou salvar checklist (até 5 dias úteis).
+        Média: funciona, mas com resultado errado ou passo a mais (até 7 dias úteis).
+        Baixa: texto, cor, alinhamento ou detalhe visual (na próxima entrega).
+      options: [Crítica, Alta, Média, Baixa]
+    validations:
+      required: true
+  - type: textarea
+    id: imagens
+    attributes:
+      label: Imagens
+      description: Arraste aqui os prints ou o vídeo.
+    validations:
+      required: true
