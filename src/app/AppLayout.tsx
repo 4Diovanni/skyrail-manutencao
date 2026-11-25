@@ -32,6 +32,7 @@ const LINKS: [string, string, boolean?][] = [
   ['/documentos', 'Documentos'],
   ['/perfil', 'Meu perfil', true],
   ['/perfil/assinatura', 'Minha assinatura', true],
+  ['/politica', 'Política de uso', true],
 ]
 
 export function AppLayout() {

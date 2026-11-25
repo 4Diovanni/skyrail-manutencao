@@ -185,6 +185,11 @@ if (env.HOMOL_TESTE_RE && env.HOMOL_TESTE_SENHA) {
     exigir(p.ok, `tabela profiles: HTTP ${p.status} (migrações aplicadas?)`)
     const linhas = await p.json()
     exigir(Array.isArray(linhas) && linhas.length > 0, 'o usuário de teste não enxerga o próprio perfil')
+    // Sem a tabela de aceite, ninguém passa da tela da política de uso.
+    const ac = await buscarComRetry(`${supabaseUrl}/rest/v1/aceites_politica?select=versao&limit=1`, {
+      headers: { apikey: anonKey, authorization: `Bearer ${access_token}` },
+    })
+    exigir(ac.ok, `tabela aceites_politica: HTTP ${ac.status} (migração 0007 aplicada?)`)
   })
 } else {
   registrar('Login e leitura do perfil (RLS)', true, 'pulado: secrets HOMOL_TESTE_RE e HOMOL_TESTE_SENHA não configurados')
