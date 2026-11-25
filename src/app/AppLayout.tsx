@@ -6,6 +6,7 @@ import { processarFilaPassagem } from '../modules/passagem/data/envio'
 import { processarFila as filaPreventivas } from '../modules/preventivas/data/envio'
 import { processarFila } from '../modules/relatorio/data/envio'
 import { useAuth } from '../auth/AuthContext'
+import { MenuConta } from './MenuConta'
 import { adotarRascunhosAntigos, sairComAviso } from './sair'
 
 function useOnline() {
@@ -23,12 +24,14 @@ function useOnline() {
   return online
 }
 
-const LINKS: [string, string][] = [
+// O terceiro valor marca os links que, no PC, saem da barra e vão para o menu da conta (canto direito).
+const LINKS: [string, string, boolean?][] = [
   ['/relatorio', 'Relatório'],
   ['/preventivas', 'Preventivas'],
   ['/passagem', 'Passagem de turno'],
   ['/documentos', 'Documentos'],
-  ['/perfil/assinatura', 'Minha assinatura'],
+  ['/perfil', 'Meu perfil', true],
+  ['/perfil/assinatura', 'Minha assinatura', true],
 ]
 
 export function AppLayout() {
@@ -81,15 +84,22 @@ export function AppLayout() {
           </span>
         </button>
         <nav id="menu-principal" className={menuAberto ? 'aberto' : ''} aria-label="Menu principal">
-          {LINKS.map(([to, rotulo]) => (
-            <NavLink key={to} to={to} onClick={() => setMenuAberto(false)}>
+          {LINKS.map(([to, rotulo, conta]) => (
+            <NavLink
+              key={to}
+              to={to}
+              end={to === '/perfil'}
+              className={conta ? 'so-celular' : undefined}
+              onClick={() => setMenuAberto(false)}
+            >
               {rotulo}
             </NavLink>
           ))}
-          <button type="button" className="btn-sair" onClick={() => void sairComAviso()}>
+          <button type="button" className="btn-sair so-celular" onClick={() => void sairComAviso()}>
             Sair
           </button>
         </nav>
+        <MenuConta />
       </header>
       {menuAberto && <div className="menu-fundo" onClick={() => setMenuAberto(false)} aria-hidden="true" />}
       <Avisos />

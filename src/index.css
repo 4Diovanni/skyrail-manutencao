@@ -52,6 +52,8 @@ button:disabled { opacity: .6; }
   .layout nav a { order: 1; min-height: 40px; padding: 0 12px; font-size: .95rem; color: var(--muted); }
   .rede { order: 2; margin-left: auto; }
   .layout nav .btn-sair { order: 3; margin: 0; min-height: 40px; }
+  .layout nav .so-celular { display: none; }
+
 }
 .layout main { padding: 16px; }
 .hint { color: var(--muted); font-size: .9rem; }
@@ -259,3 +261,28 @@ button.link { background: none; color: var(--accent); padding: 4px 0; min-height
 .aviso-envio.ok { background: #e6f6ea; color: #14532d; border-color: #16a34a; }
 .aviso-envio.fila { background: #fff7e0; color: #5a4300; border-color: #e0a100; }
 .aviso-envio.erro { background: #fde8e8; color: #7a1a14; border-color: #dc2626; }
+
+/* Meu perfil */
+.meu-perfil { max-width: 560px; }
+.ficha-perfil { display: grid; gap: 12px; margin: 0 0 12px; }
+.ficha-perfil div { min-width: 0; }
+.ficha-perfil dt { color: var(--muted); font-size: .85rem; }
+.ficha-perfil dd { margin: 2px 0 0; font-size: 1.05rem; font-weight: 600; overflow-wrap: anywhere; }
+.meu-perfil .botao { display: inline-flex; align-items: center; min-height: 44px; margin-bottom: 8px; }
+
+/* Menu da conta (canto superior direito, só no PC) */
+.conta { display: none; position: relative; }
+.conta-botao { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 4px 10px 4px 4px; background: transparent; color: var(--fg); border: 1px solid var(--border); border-radius: 999px; font-weight: 600; }
+.conta-botao:hover, .conta-botao[aria-expanded="true"] { background: color-mix(in srgb, var(--accent) 10%, transparent); }
+.conta-botao:focus-visible { outline: 2px solid var(--accent); }
+.avatar { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; background: var(--accent); color: #fff; font-size: .85rem; font-weight: 700; }
+.conta-nome { max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.seta { color: var(--muted); font-size: .8rem; }
+.conta-menu { position: absolute; right: 0; top: calc(100% + 8px); min-width: 240px; display: flex; flex-direction: column; padding: 6px; background: var(--card); border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 12px 24px rgb(0 0 0 / .18); z-index: 30; }
+.conta-cabecalho { display: grid; gap: 2px; padding: 10px 12px 12px; margin-bottom: 4px; border-bottom: 1px solid var(--border); }
+.conta-cabecalho strong { overflow-wrap: anywhere; }
+.conta-cabecalho small { color: var(--muted); }
+.conta-menu a, .conta-menu .conta-sair { display: flex; align-items: center; min-height: 42px; padding: 0 12px; border-radius: 8px; color: var(--fg); text-decoration: none; font-size: .95rem; background: transparent; font-weight: 400; text-align: left; }
+.conta-menu a:hover, .conta-menu .conta-sair:hover { background: color-mix(in srgb, var(--accent) 10%, transparent); }
+.conta-menu .conta-sair { margin-top: 4px; border-top: 1px solid var(--border); border-radius: 0 0 8px 8px; color: #dc2626; }
+@media (min-width: 900px) { .conta { display: block; order: 3; } }
