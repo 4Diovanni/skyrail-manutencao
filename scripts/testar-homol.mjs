@@ -43,6 +43,23 @@ async function buscar(url, init) {
   return r
 }
 
+// Para o Supabase: um 5xx ou falha de rede momentânea (ex.: 522 do Cloudflare) não reprova a homologação.
+// Tenta de novo com espera crescente (3, 6, 12 s); um 4xx volta na hora, porque é erro de verdade.
+async function buscarComRetry(url, init, tentativas = 4) {
+  let ultimo = ''
+  for (let i = 0; i < tentativas; i++) {
+    if (i) await dormir(3000 * 2 ** (i - 1))
+    try {
+      const r = await buscar(url, init)
+      if (r.status < 500) return r
+      ultimo = `HTTP ${r.status}`
+    } catch (e) {
+      ultimo = e instanceof Error ? e.message : String(e)
+    }
+  }
+  throw new Error(`${ultimo} após ${tentativas} tentativas`)
+}
+
 function finalizar() {
   const falhas = resultados.filter((r) => !r.ok)
   const linhas = [
@@ -147,7 +164,7 @@ await checar('Bundle aponta para o Supabase de homologação', async () => {
 
 // 4. Supabase de homologação no ar
 await checar('Supabase (Auth) responde', async () => {
-  const r = await buscar(`${supabaseUrl}/auth/v1/health`, { headers: { apikey: anonKey } })
+  const r = await buscarComRetry(`${supabaseUrl}/auth/v1/health`, { headers: { apikey: anonKey } })
   exigir(r.ok, `HTTP ${r.status}`)
 })
 
@@ -155,14 +172,14 @@ await checar('Supabase (Auth) responde', async () => {
 if (env.HOMOL_TESTE_RE && env.HOMOL_TESTE_SENHA) {
   await checar('Login e leitura do perfil (RLS)', async () => {
     const dominio = env.HOMOL_LOGIN_DOMAIN || 'l17.local'
-    const r = await buscar(`${supabaseUrl}/auth/v1/token?grant_type=password`, {
+    const r = await buscarComRetry(`${supabaseUrl}/auth/v1/token?grant_type=password`, {
       method: 'POST',
       headers: { apikey: anonKey, 'content-type': 'application/json' },
       body: JSON.stringify({ email: `${env.HOMOL_TESTE_RE}@${dominio}`, password: env.HOMOL_TESTE_SENHA }),
     })
     exigir(r.ok, `login recusado (HTTP ${r.status})`)
     const { access_token } = await r.json()
-    const p = await buscar(`${supabaseUrl}/rest/v1/profiles?select=id&limit=1`, {
+    const p = await buscarComRetry(`${supabaseUrl}/rest/v1/profiles?select=id&limit=1`, {
       headers: { apikey: anonKey, authorization: `Bearer ${access_token}` },
     })
     exigir(p.ok, `tabela profiles: HTTP ${p.status} (migrações aplicadas?)`)
