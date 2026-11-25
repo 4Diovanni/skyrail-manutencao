@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { comprimirFoto } from '../lib/fotos'
+import { avisar } from '../lib/avisos'
 
 /** Foto guardada no aparelho (blob ainda não enviado) ou já no Storage (storagePath). */
 export interface FotoBase {
@@ -104,7 +105,7 @@ export function FotosLista({ repo, chave, onMudou, rotuloAdicionar = 'Adicionar 
         const blob = await comprimirFoto(files[n]!)
         await repo.criar({ id: crypto.randomUUID(), ordem: base + n, legenda: '', blob })
       } catch {
-        alert('Não foi possível adicionar uma das fotos.')
+        avisar('erro', 'Não foi possível adicionar uma das fotos. Tente de novo ou escolha outra.')
       }
     }
     setOcupado(null)

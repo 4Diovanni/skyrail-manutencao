@@ -7,6 +7,7 @@ import type { Atividade } from '../domain/tipos'
 import { camposFaltando } from '../domain/validacao'
 import { atividadeParaRascunho } from '../domain/rascunho'
 import { importarModulo } from '../../../lib/versaoNova'
+import { avisar } from '../../../lib/avisos'
 
 /** Botões de uma atividade já enviada: PDF, OS/Registro e Assinar. */
 export function AcoesAtividade({ a, numero }: { a: Atividade & { equipe: string[] }; numero: number }) {
@@ -19,7 +20,7 @@ export function AcoesAtividade({ a, numero }: { a: Atividade & { equipe: string[
   async function pdf(tipo: 'relatorio' | 'os' | 'rm') {
     const falta = camposFaltando(atividadeParaRascunho(a, a.equipe))
     if (falta.length) {
-      alert(`O PDF não foi gerado porque faltam informações:\n\n• ${falta.join('\n• ')}\n\nToque na atividade para completar e envie de novo.`)
+      avisar('erro', `O PDF não foi gerado. Falta: ${falta.join('; ')}. Toque na atividade para completar e envie de novo.`)
       return
     }
     setOcupado('Gerando PDF…')
@@ -27,10 +28,10 @@ export function AcoesAtividade({ a, numero }: { a: Atividade & { equipe: string[
       const { gerarEGuardar, entregarPdf } = await importarModulo(() => import('../pdf/servico'))
       const r = await gerarEGuardar(a.id, tipo, numero)
       setOcupado(null)
-      if (!r.guardado) alert('O PDF foi gerado, mas não foi possível guardar no servidor. Ele será entregue só neste aparelho.')
+      if (!r.guardado) avisar('fila', 'O PDF foi gerado, mas não foi possível guardar no servidor. Ele foi entregue só neste aparelho.')
       await entregarPdf(r.blob, r.nome)
     } catch (e) {
-      alert(`Erro ao gerar o PDF: ${(e as Error).message}`)
+      avisar('erro', `Erro ao gerar o PDF: ${(e as Error).message}`)
     } finally {
       setOcupado(null)
     }
@@ -46,9 +47,9 @@ export function AcoesAtividade({ a, numero }: { a: Atividade & { equipe: string[
       }
       if (!confirm(`Confirmar a sua assinatura nesta versão da atividade “${a.titulo}”?`)) return
       await assinar(a.id, papeis)
-      alert('Assinatura aplicada. Ela aparece nos próximos PDFs desta versão.')
+      avisar('ok', 'Assinatura aplicada. Ela aparece nos próximos PDFs desta versão.')
     } catch (e) {
-      alert(`Não foi possível assinar: ${(e as Error).message}`)
+      avisar('erro', `Não foi possível assinar: ${(e as Error).message}`)
     } finally {
       setOcupado(null)
     }

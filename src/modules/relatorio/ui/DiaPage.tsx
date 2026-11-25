@@ -2,7 +2,7 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import { useEffect, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../../../auth/AuthContext'
-import { avisarFila } from '../../../lib/avisos'
+import { avisar, avisarFila } from '../../../lib/avisos'
 import { processarFila } from '../data/envio'
 import { meusRascunhos, minhaFila } from '../data/local'
 import { excluirAtividade, listarAtividades } from '../data/remoto'
@@ -57,7 +57,7 @@ export function DiaPage() {
       await excluirAtividade(id)
       setRecarga((n) => n + 1)
     } catch {
-      alert('Não foi possível excluir. Só quem criou a atividade (ou um admin) pode excluir.')
+      avisar('erro', 'Não foi possível excluir. Só quem criou a atividade (ou um admin) pode excluir.')
     }
   }
 
