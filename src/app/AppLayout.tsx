@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
+import { Avisos } from '../components/Avisos'
 import { registrarSincronizacao, sincronizarAgora } from '../lib/sync'
 import { processarFilaPassagem } from '../modules/passagem/data/envio'
 import { processarFila as filaPreventivas } from '../modules/preventivas/data/envio'
@@ -33,9 +34,9 @@ export function AppLayout() {
   const online = useOnline()
   // Fila de envio: roda ao abrir o app, quando a internet volta e a cada 30 minutos.
   useEffect(() => {
-    const p1 = registrarSincronizacao(processarFila)
-    const p2 = registrarSincronizacao(filaPreventivas)
-    const p3 = registrarSincronizacao(processarFilaPassagem)
+    const p1 = registrarSincronizacao({ rotulo: 'Relatório', executar: processarFila })
+    const p2 = registrarSincronizacao({ rotulo: 'Preventivas', executar: filaPreventivas })
+    const p3 = registrarSincronizacao({ rotulo: 'Passagem de turno', executar: processarFilaPassagem })
     void sincronizarAgora()
     return () => {
       p1()
@@ -87,6 +88,7 @@ export function AppLayout() {
         </nav>
       </header>
       {menuAberto && <div className="menu-fundo" onClick={() => setMenuAberto(false)} aria-hidden="true" />}
+      <Avisos />
       <main>
         <Outlet />
       </main>

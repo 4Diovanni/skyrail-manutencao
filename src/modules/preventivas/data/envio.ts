@@ -1,3 +1,4 @@
+import type { ResultadoFila } from '../../../lib/avisos'
 import { supabase } from '../../../lib/supabase'
 import { rascunhoParaLinha } from '../domain/preventiva'
 import { prevDb, type RascunhoLocal } from './local'
@@ -69,9 +70,10 @@ async function enviarFotos(preventivaId: string, ocorrencias: Set<string>) {
 }
 
 /** Processa a fila: tudo que está em "fila" ou "erro" é reenviado. */
-export async function processarFila(): Promise<{ enviados: number; pendentes: number }> {
+export async function processarFila(): Promise<ResultadoFila> {
   const itens = await prevDb.rascunhos.where('estado').anyOf('fila', 'erro').toArray()
   let enviados = 0
+  const erros: string[] = []
   for (const item of itens) {
     const res = await enviarRascunho(item)
     if (res.ok) {
@@ -82,7 +84,8 @@ export async function processarFila(): Promise<{ enviados: number; pendentes: nu
       enviados++
     } else if (!res.offline) {
       await prevDb.rascunhos.update(item.id, { estado: 'erro', erro: res.mensagem })
+      erros.push(res.mensagem)
     }
   }
-  return { enviados, pendentes: itens.length - enviados }
+  return { enviados, pendentes: itens.length - enviados, erros }
 }
