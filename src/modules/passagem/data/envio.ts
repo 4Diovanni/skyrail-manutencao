@@ -3,6 +3,7 @@ import { supabase } from '../../../lib/supabase'
 import { rascunhoParaLinha } from '../domain/passagem'
 import type { RascunhoPassagem } from '../domain/tipos'
 import { passDb, salvarLocal } from './local'
+import { ehDoDono } from '../../../lib/donoLocal'
 
 export type ResultadoEnvio = { ok: true; versao: number; id: string } | { ok: false; offline: boolean; mensagem: string }
 
@@ -33,7 +34,8 @@ export async function versaoNoServidor(r: RascunhoPassagem): Promise<number | nu
 
 /** Fila: envia as passagens que ficaram esperando internet. */
 export async function processarFilaPassagem(): Promise<ResultadoFila> {
-  const fila = await passDb.rascunhos.where('estado').equals('fila').toArray()
+  // Só a fila de quem está logado: o envio usa a sessão dessa pessoa.
+  const fila = await passDb.rascunhos.where('estado').equals('fila').filter((r) => ehDoDono(r)).toArray()
   let enviados = 0
   const erros: string[] = []
   for (const l of fila) {

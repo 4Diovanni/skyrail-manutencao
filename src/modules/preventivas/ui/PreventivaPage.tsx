@@ -8,7 +8,7 @@ import { EquipeCampo, PessoaSelect } from '../../relatorio/ui/campos/EquipeCampo
 import { TemposCampo } from '../../relatorio/ui/campos/TemposCampo'
 import { useReferencias } from '../../relatorio/ui/useReferencias'
 import { processarFila } from '../data/envio'
-import { descartarRascunho, prevDb, salvarRascunho } from '../data/local'
+import { descartarRascunho, meuRascunho, prevDb, salvarRascunho } from '../data/local'
 import { buscarPreventiva } from '../data/remoto'
 import { errosEnvio, preventivaParaRascunho, type RascunhoPreventiva } from '../domain/preventiva'
 import type { Respostas } from '../domain/respostas'
@@ -18,7 +18,7 @@ import { dataBR, useModelos } from './useModelos'
 
 /** Abre o rascunho do aparelho; se não houver, parte da versão enviada ao servidor. */
 async function carregar(id: string): Promise<RascunhoPreventiva | null> {
-  const local = await prevDb.rascunhos.get(id)
+  const local = await meuRascunho(id)
   if (local) return local.dados
   const remoto = await buscarPreventiva(id)
   if (!remoto) return null

@@ -3,7 +3,8 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { avisarFila } from '../../../lib/avisos'
 import { processarFila } from '../data/envio'
-import { prevDb } from '../data/local'
+import { useAuth } from '../../../auth/AuthContext'
+import { meusRascunhos } from '../data/local'
 import { listarPreventivas } from '../data/remoto'
 import type { ModeloChecklist } from '../domain/modelo'
 import type { Preventiva, RascunhoPreventiva } from '../domain/preventiva'
@@ -48,7 +49,8 @@ function Cartao({ p, estado, modelos }: { p: RascunhoPreventiva | Preventiva; es
 
 export function PreventivasPage() {
   const { modelos } = useModelos()
-  const locais = useLiveQuery(() => prevDb.rascunhos.toArray(), []) ?? []
+  const uid = useAuth().session?.user.id
+  const locais = useLiveQuery(() => meusRascunhos().toArray(), [uid]) ?? []
   const [remotas, setRemotas] = useState<(Preventiva & { equipe: string[] })[]>([])
   const [semRede, setSemRede] = useState(false)
   const [recarga, setRecarga] = useState(0)
