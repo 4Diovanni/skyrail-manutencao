@@ -28,6 +28,7 @@ const LINKS: [string, string][] = [
   ['/preventivas', 'Preventivas'],
   ['/passagem', 'Passagem de turno'],
   ['/documentos', 'Documentos'],
+  ['/perfil', 'Meu perfil'],
   ['/perfil/assinatura', 'Minha assinatura'],
 ]
 
@@ -82,7 +83,7 @@ export function AppLayout() {
         </button>
         <nav id="menu-principal" className={menuAberto ? 'aberto' : ''} aria-label="Menu principal">
           {LINKS.map(([to, rotulo]) => (
-            <NavLink key={to} to={to} onClick={() => setMenuAberto(false)}>
+            <NavLink key={to} to={to} end={to === '/perfil'} onClick={() => setMenuAberto(false)}>
               {rotulo}
             </NavLink>
           ))}
