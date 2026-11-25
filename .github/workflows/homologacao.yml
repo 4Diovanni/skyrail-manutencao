@@ -1,0 +1,73 @@
+name: Homologação
+
+# Pipeline pós-merge: quando algo entra na branch homologacao, espera a Netlify
+# publicar o site de homol, testa o site e o Supabase de homologação e, se algo
+# falhar, para e relata (issue + comentário no PR do merge).
+#
+# Configuração (Settings → Secrets and variables → Actions):
+#   Variables: HOMOL_URL, HOMOL_SUPABASE_URL, HOMOL_SUPABASE_ANON_KEY (chave pública)
+#   Secrets (opcionais): HOMOL_TESTE_RE, HOMOL_TESTE_SENHA (usuário fictício de teste)
+on:
+  push:
+    branches: [homologacao]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+concurrency:
+  group: homologacao
+  cancel-in-progress: true
+
+jobs:
+  homol:
+    name: Testar site de homologação
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Instalar navegador para o teste de tela
+        run: |
+          npm install --no-save --no-package-lock playwright@1.49.1
+          npx playwright install --with-deps chromium
+
+      - name: Testar o site publicado
+        env:
+          HOMOL_URL: ${{ vars.HOMOL_URL }}
+          HOMOL_SUPABASE_URL: ${{ vars.HOMOL_SUPABASE_URL }}
+          HOMOL_SUPABASE_ANON_KEY: ${{ vars.HOMOL_SUPABASE_ANON_KEY }}
+          HOMOL_TESTE_RE: ${{ secrets.HOMOL_TESTE_RE }}
+          HOMOL_TESTE_SENHA: ${{ secrets.HOMOL_TESTE_SENHA }}
+          COMMIT_ESPERADO: ${{ github.event_name == 'push' && github.sha || '' }}
+        run: node scripts/testar-homol.mjs
+
+      - name: Nenhum segredo no JS publicado
+        run: node scripts/checar-segredos.mjs homol-baixado
+
+      - name: Relatar falha
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          {
+            echo "O teste do site de homologação falhou no commit \`${GITHUB_SHA::7}\`. Não promova para a main até corrigir."
+            echo
+            echo "Execução: $RUN_URL"
+            echo
+            [ -f homol-resultado.md ] && cat homol-resultado.md
+          } > relato.md
+          PR=$(gh api "repos/$GITHUB_REPOSITORY/commits/$GITHUB_SHA/pulls" --jq '.[0].number // empty' || true)
+          if [ -n "$PR" ]; then
+            gh pr comment "$PR" --repo "$GITHUB_REPOSITORY" --body-file relato.md || true
+            echo "Relatado no PR #$PR"
+          fi
+          gh issue create --repo "$GITHUB_REPOSITORY" \
+            --title "Homologação falhou (${GITHUB_SHA::7})" \
+            --body-file relato.md --assignee "$GITHUB_ACTOR" \
+            || gh issue create --repo "$GITHUB_REPOSITORY" --title "Homologação falhou (${GITHUB_SHA::7})" --body-file relato.md
