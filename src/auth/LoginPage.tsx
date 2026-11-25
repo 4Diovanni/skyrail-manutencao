@@ -44,6 +44,7 @@ export function LoginPage() {
         <button type="submit" disabled={busy}>{busy ? 'Entrando…' : 'Entrar'}</button>
       </form>
       <p className="hint">Esqueceu a senha? Peça ao administrador para gerar uma nova senha provisória.</p>
+      <p className="hint versao-app">Versão {__APP_VERSION__}</p>
     </main>
   )
 }

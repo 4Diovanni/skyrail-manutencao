@@ -21,6 +21,7 @@ export function MeuPerfilPage() {
       </dl>
       <Link to="/perfil/assinatura" className="botao sec">Minha assinatura</Link>
       <p className="hint">Nome ou RE errado? Peça a correção ao administrador.</p>
+      <p className="hint versao-app">Versão do app {__APP_VERSION__}</p>
     </section>
   )
 }
