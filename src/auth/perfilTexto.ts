@@ -19,3 +19,16 @@ export function fichaPerfil(p: Pick<PerfilUsuario, 'nome' | 'matricula' | 'perfi
     ['Perfil', rotuloPerfil(p.perfil)],
   ]
 }
+
+/** Até duas iniciais do nome (primeiro e último), para o botão de conta. */
+export function iniciais(nome: string | null | undefined): string {
+  const partes = (nome ?? '').trim().split(/\s+/).filter(Boolean)
+  if (!partes.length) return '?'
+  const primeira = partes[0]?.[0] ?? ''
+  const ultima = partes.length > 1 ? (partes[partes.length - 1]?.[0] ?? '') : ''
+  return (primeira + ultima).toUpperCase()
+}
+
+export function primeiroNome(nome: string | null | undefined): string {
+  return (nome ?? '').trim().split(/\s+/)[0] || 'Minha conta'
+}

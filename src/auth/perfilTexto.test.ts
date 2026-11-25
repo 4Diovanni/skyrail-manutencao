@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { fichaPerfil, rotuloPerfil } from './perfilTexto'
+import { fichaPerfil, iniciais, primeiroNome, rotuloPerfil } from './perfilTexto'
 
 describe('rotuloPerfil', () => {
   it('traduz os três perfis', () => {
@@ -23,5 +23,19 @@ describe('fichaPerfil', () => {
     expect(nome).toMatch(/administrador/)
     expect(re).toMatch(/administrador/)
     expect(perfil).toBe('Supervisor')
+  })
+})
+
+describe('iniciais e primeiroNome', () => {
+  it('usa a primeira letra do primeiro e do último nome', () => {
+    expect(iniciais('Técnico Fictício da Silva')).toBe('TS')
+    expect(iniciais('ana')).toBe('A')
+    expect(iniciais('  ')).toBe('?')
+    expect(iniciais(null)).toBe('?')
+  })
+
+  it('primeiro nome, ou "Minha conta" sem nome', () => {
+    expect(primeiroNome('Técnico Fictício da Silva')).toBe('Técnico')
+    expect(primeiroNome(null)).toBe('Minha conta')
   })
 })
