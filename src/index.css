@@ -259,3 +259,11 @@ button.link { background: none; color: var(--accent); padding: 4px 0; min-height
 .aviso-envio.ok { background: #e6f6ea; color: #14532d; border-color: #16a34a; }
 .aviso-envio.fila { background: #fff7e0; color: #5a4300; border-color: #e0a100; }
 .aviso-envio.erro { background: #fde8e8; color: #7a1a14; border-color: #dc2626; }
+
+/* Meu perfil */
+.meu-perfil { max-width: 560px; }
+.ficha-perfil { display: grid; gap: 12px; margin: 0 0 12px; }
+.ficha-perfil div { min-width: 0; }
+.ficha-perfil dt { color: var(--muted); font-size: .85rem; }
+.ficha-perfil dd { margin: 2px 0 0; font-size: 1.05rem; font-weight: 600; overflow-wrap: anywhere; }
+.meu-perfil .botao { display: inline-flex; align-items: center; min-height: 44px; margin-bottom: 8px; }

@@ -1,5 +1,6 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom'
 import { LoginPage } from '../auth/LoginPage'
+import { MeuPerfilPage } from '../auth/MeuPerfilPage'
 import { RequireAuth } from '../auth/RequireAuth'
 import { TrocarSenhaPage } from '../auth/TrocarSenhaPage'
 import { PassagemPage } from '../modules/passagem/ui/PassagemPage'
@@ -31,6 +32,7 @@ export const router = createBrowserRouter([
           { path: 'relatorio/atividade/:id', element: <AtividadePage /> },
           { path: 'relatorio/reprogramacoes', element: <ReprogramacoesPage /> },
           { path: 'documentos', element: <DocumentosPage /> },
+          { path: 'perfil', element: <MeuPerfilPage /> },
           { path: 'perfil/assinatura', element: <MinhaAssinaturaPage /> },
           { path: 'passagem', element: <PassagemPage /> },
         ],
