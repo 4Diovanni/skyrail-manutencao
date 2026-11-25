@@ -64,3 +64,26 @@ Pode rodar de novo: atualiza pelo id, e a versão do modelo sobe se o conteúdo 
 
 ## Fluxo de trabalho
 Um branch por funcionalidade, PR revisado antes do merge. Nunca commitar direto na `main`.
+
+**Homologação antes da produção.** Tudo passa primeiro pela homologação:
+
+1. Branch de funcionalidade → PR para `homologacao`. O CI roda tipos, lint, testes, build, RLS e segurança.
+2. Merge na `homologacao` → a Netlify publica o site de homol (Supabase de homologação) e o workflow
+   **Homologação** testa o site publicado. Se algo falhar, ele para, abre uma issue e comenta no PR.
+3. Com o **Homologação** verde → PR `homologacao` → `main` (produção). O CI recusa PR para a `main`
+   que não venha da `homologacao`.
+
+Migrações e mudanças de configuração do Supabase seguem a mesma ordem: homologação primeiro.
+
+### Configurar o teste de homologação
+Em *Settings → Secrets and variables → Actions* do GitHub:
+
+| Tipo | Nome | Valor |
+| --- | --- | --- |
+| Variable | `HOMOL_URL` | endereço do site de homol na Netlify |
+| Variable | `HOMOL_SUPABASE_URL` | URL do Supabase de homologação |
+| Variable | `HOMOL_SUPABASE_ANON_KEY` | chave **pública** (publishable/anon) de homologação |
+| Secret (opcional) | `HOMOL_TESTE_RE` / `HOMOL_TESTE_SENHA` | usuário **fictício** só de homologação, para testar o login |
+
+Nunca coloque a secret/service_role key aqui. Para travar o fluxo, em *Settings → Branches* proteja a
+`homologacao` (exigir os checks do CI) e a `main` (exigir os checks do CI e **Testar site de homologação**).

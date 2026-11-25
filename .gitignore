@@ -27,3 +27,7 @@ dist-ssr
 .env
 .env.*
 !.env.example
+
+# Saídas do teste de homologação (scripts/testar-homol.mjs)
+homol-resultado.md
+homol-baixado/

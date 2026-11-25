@@ -51,6 +51,25 @@ Comandos: `npm run dev`, `npm run build`, `npm test` (Vitest), `npx oxlint src`,
 Branch por funcionalidade, commits pequenos e descritivos, PR para revisão do Giovanni (4Diovanni).
 Nunca commitar direto na `main`.
 
+### Homologação antes da produção (regra do Giovanni)
+
+- **Tudo é aplicado primeiro em homologação e só depois na `main` (produção).** Vale para código,
+  migrações do banco, configuração do Supabase (Auth, Storage) e variáveis da Netlify.
+- PR de funcionalidade aponta para a branch `homologacao`, nunca direto para a `main`.
+- Depois do merge na `homologacao`, a Netlify publica o site de homol (Supabase de homologação) e o
+  workflow `Homologação` testa o site publicado. Se falhar, ele abre uma issue, comenta no PR e nada sobe.
+- Só com o `Homologação` verde abre-se o PR `homologacao` → `main`. O CI recusa PR para a `main`
+  que venha de outra branch.
+- Migração nova roda primeiro no Supabase de homologação; na produção, só depois de testada lá.
+
+### Pipelines (GitHub Actions)
+
+- `ci.yml` (todo PR): tipos, oxlint, Vitest, build, testes de RLS, checagem de segredos no repositório
+  e no bundle (`scripts/checar-segredos.mjs`), `npm audit` das dependências do app e a regra do fluxo acima.
+- `homologacao.yml` (merge na `homologacao`): espera a Netlify publicar o commit (`/versao.json`) e roda
+  `scripts/testar-homol.mjs` (página, noindex, bundle apontando para o Supabase de homol, Auth no ar,
+  login de usuário fictício, tela de login no Pixel 5 sem erro de JS).
+
 ### Prova de teste em todo PR (regra do Giovanni)
 
 - Toda mudança testada no app vem com **prints do celular (ex.: Pixel 5) e do PC (1280 px)** mostrando o efeito,
