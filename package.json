@@ -5,14 +5,16 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && vite build && node scripts/gerar-versao.mjs",
     "lint": "oxlint",
     "preview": "vite preview",
     "test": "vitest run",
     "typecheck": "tsc -b",
     "test:db": "bash scripts/test-db.sh",
     "criar-usuario": "node --env-file-if-exists=.env.admin scripts/criar-usuario.mjs",
-    "importar-checklists": "node --env-file-if-exists=.env.admin scripts/importar-checklists.mjs"
+    "importar-checklists": "node --env-file-if-exists=.env.admin scripts/importar-checklists.mjs",
+    "checar:segredos": "node scripts/checar-segredos.mjs",
+    "testar:homol": "node scripts/testar-homol.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.119.0",
