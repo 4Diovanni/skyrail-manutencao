@@ -75,11 +75,17 @@ await checar('Netlify publicou o commit', async () => {
   while (Date.now() - inicio < esperaMaxMs) {
     try {
       const r = await buscar(`${site}/versao.json?t=${Date.now()}`)
+      if (r.status === 401) {
+        throw new Error(
+          'o site pede login da Netlify (Visitor access). O pipeline não consegue passar por ele; libere o acesso do site de homol ou configure uma senha.',
+        )
+      }
       if (r.ok) {
         visto = (await r.json()).commit || ''
         if (visto === commitEsperado) return `publicado em ${Math.round((Date.now() - inicio) / 1000)} s`
       }
-    } catch {
+    } catch (e) {
+      if (e instanceof Error && e.message.includes('Visitor access')) throw e
       // site ainda subindo; tenta de novo
     }
     await dormir(20_000)
