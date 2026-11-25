@@ -11,8 +11,8 @@
     "test": "vitest run",
     "typecheck": "tsc -b",
     "test:db": "bash scripts/test-db.sh",
-    "criar-usuario": "node scripts/criar-usuario.mjs",
-    "importar-checklists": "node scripts/importar-checklists.mjs"
+    "criar-usuario": "node --env-file-if-exists=.env.admin scripts/criar-usuario.mjs",
+    "importar-checklists": "node --env-file-if-exists=.env.admin scripts/importar-checklists.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.119.0",
