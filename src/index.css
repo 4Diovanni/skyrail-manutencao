@@ -286,3 +286,4 @@ button.link { background: none; color: var(--accent); padding: 4px 0; min-height
 .conta-menu a:hover, .conta-menu .conta-sair:hover { background: color-mix(in srgb, var(--accent) 10%, transparent); }
 .conta-menu .conta-sair { margin-top: 4px; border-top: 1px solid var(--border); border-radius: 0 0 8px 8px; color: #dc2626; }
 @media (min-width: 900px) { .conta { display: block; order: 3; } }
+.versao-app { font-size: .8rem; text-align: center; margin-top: 1.5rem; }
