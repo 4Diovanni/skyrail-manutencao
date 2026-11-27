@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
 import { Avisos } from '../components/Avisos'
+import { UltimaSincronizacao } from '../components/UltimaSincronizacao'
 import { registrarSincronizacao, sincronizarAgora } from '../lib/sync'
 import { processarFilaPassagem } from '../modules/passagem/data/envio'
 import { processarFila as filaPreventivas } from '../modules/preventivas/data/envio'
@@ -32,6 +33,7 @@ const LINKS: [string, string, boolean?][] = [
   ['/documentos', 'Documentos'],
   ['/perfil', 'Meu perfil', true],
   ['/perfil/assinatura', 'Minha assinatura', true],
+  ['/politica', 'Política de uso', true],
 ]
 
 export function AppLayout() {
@@ -95,6 +97,7 @@ export function AppLayout() {
               {rotulo}
             </NavLink>
           ))}
+          <UltimaSincronizacao className="so-celular" />
           <button type="button" className="btn-sair so-celular" onClick={() => void sairComAviso()}>
             Sair
           </button>

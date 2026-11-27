@@ -1,8 +1,9 @@
 import { Navigate, Outlet, useLocation } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
+import { AceitePolitica } from '../modules/politica/ui/AceitePolitica'
 import { useAuth } from './AuthContext'
 
-/** Nenhuma tela com dados é renderizada sem sessão válida e perfil ativo. */
+/** Nenhuma tela com dados é renderizada sem sessão válida, perfil ativo e aceite da política de uso. */
 export function RequireAuth() {
   const { session, perfil, loading } = useAuth()
   const location = useLocation()
@@ -20,5 +21,11 @@ export function RequireAuth() {
   if (perfil.deve_trocar_senha && location.pathname !== '/trocar-senha') {
     return <Navigate to="/trocar-senha" replace />
   }
-  return <Outlet />
+  if (location.pathname === '/trocar-senha') return <Outlet />
+  // Depois da senha, a política de uso: as telas só abrem com o aceite da versão atual.
+  return (
+    <AceitePolitica userId={perfil.id}>
+      <Outlet />
+    </AceitePolitica>
+  )
 }

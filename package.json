@@ -1,11 +1,11 @@
 {
   "name": "skyrail-manutencao",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.2.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build && node scripts/gerar-versao.mjs",
+    "build": "tsc -b && vite build && node scripts/gerar-versao.mjs && node scripts/gerar-csp.mjs",
     "lint": "oxlint",
     "preview": "vite preview",
     "test": "vitest run",
@@ -14,7 +14,8 @@
     "criar-usuario": "node --env-file-if-exists=.env.admin scripts/criar-usuario.mjs",
     "importar-checklists": "node --env-file-if-exists=.env.admin scripts/importar-checklists.mjs",
     "checar:segredos": "node scripts/checar-segredos.mjs",
-    "testar:homol": "node scripts/testar-homol.mjs"
+    "testar:homol": "node scripts/testar-homol.mjs",
+    "e2e": "node scripts/e2e/ponta-a-ponta.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.119.0",

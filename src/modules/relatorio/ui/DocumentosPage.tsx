@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { avisar } from '../../../lib/avisos'
 import { supabase } from '../../../lib/supabase'
 
 interface Documento {
@@ -33,7 +34,7 @@ export function DocumentosPage() {
   async function baixar(d: Documento) {
     const { data, error } = await supabase.storage.from('documentos').createSignedUrl(d.storage_path, 120, { download: d.nome })
     if (error || !data) {
-      alert('Não foi possível baixar este PDF.')
+      avisar('erro', 'Não foi possível baixar este PDF. Confira a internet e tente de novo.')
       return
     }
     const link = document.createElement('a')

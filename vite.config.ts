@@ -1,8 +1,13 @@
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
+import { readFileSync } from 'node:fs'
 import { defineConfig } from 'vitest/config'
 
+// Número da versão do app (package.json), mostrado em Meu perfil e na tela de login.
+const { version } = JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 'utf8')) as { version: string }
+
 export default defineConfig({
+  define: { __APP_VERSION__: JSON.stringify(version) },
   plugins: [
     react(),
     VitePWA({
@@ -26,6 +31,21 @@ export default defineConfig({
       },
     }),
   ],
+  build: {
+    rolldownOptions: {
+      output: {
+        // Bibliotecas em arquivos separados: o código do app muda a cada entrega, elas quase nunca.
+        // Assim o celular baixa de novo só o que mudou, e nenhum arquivo passa de 500 KB.
+        advancedChunks: {
+          groups: [
+            { name: 'react', test: /node_modules[\\/](react|react-dom|scheduler|react-router|react-router-dom)[\\/]/ },
+            { name: 'supabase', test: /node_modules[\\/]@supabase[\\/]/ },
+            { name: 'dexie', test: /node_modules[\\/](dexie|dexie-react-hooks)[\\/]/ },
+          ],
+        },
+      },
+    },
+  },
   test: {
     include: ['src/**/*.test.ts'],
   },

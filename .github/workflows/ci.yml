@@ -31,6 +31,35 @@ jobs:
       - name: Nenhum segredo no bundle
         run: node scripts/checar-segredos.mjs dist
 
+  e2e:
+    name: Ponta a ponta (Supabase simulado)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+        env:
+          VITE_SUPABASE_URL: https://e2e-ficticio.supabase.co
+          VITE_SUPABASE_ANON_KEY: anon-e2e
+      - name: Playwright e Chromium
+        run: |
+          npm install --no-save --no-package-lock playwright@1.49.1
+          npx playwright install --with-deps chromium
+      - run: npm run e2e
+        env:
+          VITE_SUPABASE_URL: https://e2e-ficticio.supabase.co
+      - name: Prints do teste
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-saida
+          path: e2e-saida/
+          retention-days: 7
+
   seguranca:
     name: Segurança (segredos e dependências)
     runs-on: ubuntu-latest

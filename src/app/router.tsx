@@ -1,18 +1,19 @@
+import type { ComponentType } from 'react'
 import { createBrowserRouter, Navigate } from 'react-router-dom'
 import { LoginPage } from '../auth/LoginPage'
 import { MeuPerfilPage } from '../auth/MeuPerfilPage'
 import { RequireAuth } from '../auth/RequireAuth'
 import { TrocarSenhaPage } from '../auth/TrocarSenhaPage'
-import { PassagemPage } from '../modules/passagem/ui/PassagemPage'
-import { NovaPreventivaPage } from '../modules/preventivas/ui/NovaPreventivaPage'
-import { PreventivaPage } from '../modules/preventivas/ui/PreventivaPage'
-import { PreventivasPage } from '../modules/preventivas/ui/PreventivasPage'
-import { AtividadePage } from '../modules/relatorio/ui/AtividadePage'
-import { DiaPage } from '../modules/relatorio/ui/DiaPage'
-import { DocumentosPage } from '../modules/relatorio/ui/DocumentosPage'
-import { MinhaAssinaturaPage } from '../modules/relatorio/ui/MinhaAssinaturaPage'
-import { ReprogramacoesPage } from '../modules/relatorio/ui/ReprogramacoesPage'
-import { AppLayout } from './AppLayout'
+import { importarModulo } from '../lib/versaoNova'
+
+/**
+ * Telas carregadas sob demanda: a tela de login abre sem o resto do app; depois do login vêm o menu
+ * e as filas, e cada tela vem quando é aberta (o service worker já guarda todas para o uso sem internet).
+ * importarModulo recarrega a página se um deploy novo apagou o arquivo antigo.
+ */
+function tela<M>(carregar: () => Promise<M>, nome: keyof M) {
+  return async () => ({ Component: (await importarModulo(carregar))[nome] as ComponentType })
+}
 
 export const router = createBrowserRouter([
   { path: '/login', element: <LoginPage /> },
@@ -21,20 +22,21 @@ export const router = createBrowserRouter([
     children: [
       { path: 'trocar-senha', element: <TrocarSenhaPage /> },
       {
-        element: <AppLayout />,
+        lazy: tela(() => import('./AppLayout'), 'AppLayout'),
         children: [
           { index: true, element: <Navigate to="/relatorio" replace /> },
-          { path: 'preventivas', element: <PreventivasPage /> },
-          { path: 'preventivas/nova', element: <NovaPreventivaPage /> },
-          { path: 'preventivas/:id', element: <PreventivaPage /> },
-          { path: 'relatorio', element: <DiaPage /> },
-          { path: 'relatorio/atividade/nova', element: <AtividadePage /> },
-          { path: 'relatorio/atividade/:id', element: <AtividadePage /> },
-          { path: 'relatorio/reprogramacoes', element: <ReprogramacoesPage /> },
-          { path: 'documentos', element: <DocumentosPage /> },
+          { path: 'preventivas', lazy: tela(() => import('../modules/preventivas/ui/PreventivasPage'), 'PreventivasPage') },
+          { path: 'preventivas/nova', lazy: tela(() => import('../modules/preventivas/ui/NovaPreventivaPage'), 'NovaPreventivaPage') },
+          { path: 'preventivas/:id', lazy: tela(() => import('../modules/preventivas/ui/PreventivaPage'), 'PreventivaPage') },
+          { path: 'relatorio', lazy: tela(() => import('../modules/relatorio/ui/DiaPage'), 'DiaPage') },
+          { path: 'relatorio/atividade/nova', lazy: tela(() => import('../modules/relatorio/ui/AtividadePage'), 'AtividadePage') },
+          { path: 'relatorio/atividade/:id', lazy: tela(() => import('../modules/relatorio/ui/AtividadePage'), 'AtividadePage') },
+          { path: 'relatorio/reprogramacoes', lazy: tela(() => import('../modules/relatorio/ui/ReprogramacoesPage'), 'ReprogramacoesPage') },
+          { path: 'documentos', lazy: tela(() => import('../modules/relatorio/ui/DocumentosPage'), 'DocumentosPage') },
           { path: 'perfil', element: <MeuPerfilPage /> },
-          { path: 'perfil/assinatura', element: <MinhaAssinaturaPage /> },
-          { path: 'passagem', element: <PassagemPage /> },
+          { path: 'perfil/assinatura', lazy: tela(() => import('../modules/relatorio/ui/MinhaAssinaturaPage'), 'MinhaAssinaturaPage') },
+          { path: 'passagem', lazy: tela(() => import('../modules/passagem/ui/PassagemPage'), 'PassagemPage') },
+          { path: 'politica', lazy: tela(() => import('../modules/politica/ui/PoliticaPage'), 'PoliticaPage') },
         ],
       },
     ],

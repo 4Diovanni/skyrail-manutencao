@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../auth/AuthContext'
 import { iniciais, primeiroNome, rotuloPerfil } from '../auth/perfilTexto'
+import { UltimaSincronizacao } from '../components/UltimaSincronizacao'
 import { sairComAviso } from './sair'
 
 /** Botão de conta no canto superior direito (só no PC). No celular, os mesmos links ficam no menu. */
@@ -48,9 +49,11 @@ export function MenuConta() {
             <small>
               RE {perfil.matricula || '—'} · {rotuloPerfil(perfil.perfil)}
             </small>
+            <UltimaSincronizacao />
           </div>
           <Link role="menuitem" to="/perfil" onClick={fechar}>Meu perfil</Link>
           <Link role="menuitem" to="/perfil/assinatura" onClick={fechar}>Minha assinatura</Link>
+          <Link role="menuitem" to="/politica" onClick={fechar}>Política de uso</Link>
           <button role="menuitem" type="button" className="conta-sair" onClick={() => void sairComAviso()}>
             Sair
           </button>

@@ -31,3 +31,4 @@ dist-ssr
 # Saídas do teste de homologação (scripts/testar-homol.mjs)
 homol-resultado.md
 homol-baixado/
+e2e-saida/

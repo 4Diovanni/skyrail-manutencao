@@ -286,3 +286,22 @@ button.link { background: none; color: var(--accent); padding: 4px 0; min-height
 .conta-menu a:hover, .conta-menu .conta-sair:hover { background: color-mix(in srgb, var(--accent) 10%, transparent); }
 .conta-menu .conta-sair { margin-top: 4px; border-top: 1px solid var(--border); border-radius: 0 0 8px 8px; color: #dc2626; }
 @media (min-width: 900px) { .conta { display: block; order: 3; } }
+.versao-app { font-size: .8rem; text-align: center; margin-top: 1.5rem; }
+
+/* ===== política de uso ===== */
+.aceite-politica, .pagina-politica { max-width: 720px; margin: 0 auto; }
+.aceite-politica { padding: 24px 16px 32px; }
+.aceite-politica h1 { margin: 0 0 4px; font-size: 1.5rem; }
+.texto-politica h3 { margin: 14px 0 6px; }
+.texto-politica section:first-of-type h3 { margin-top: 0; }
+.texto-politica p { margin: 0 0 8px; line-height: 1.5; }
+.selo-provisorio { display: inline-block; margin: 0 0 12px !important; padding: 4px 10px; border-radius: 999px; font-size: .8rem; font-weight: 700; color: #92400e; background: #fef3c7; }
+.marcar-aceite { display: flex; align-items: center; gap: 12px; min-height: 48px; margin: 4px 0 8px; font-weight: 600; cursor: pointer; }
+.marcar-aceite input { flex: none; width: 24px; height: 24px; }
+.acoes-politica { display: grid; gap: 10px; margin-top: 8px; }
+.acoes-politica button { min-height: 48px; font-weight: 700; }
+@media (min-width: 600px) {
+  .acoes-politica { grid-template-columns: max-content max-content; }
+}
+.ultima-sync { color: var(--muted); font-size: .85rem; }
+.layout nav .ultima-sync { padding: 10px 14px 0; }

@@ -125,6 +125,13 @@ await checar('Página abre (HTTP 200)', async () => {
   exigir(/<meta name="robots" content="[^"]*noindex/i.test(html), 'meta robots noindex ausente')
   return 'com noindex no header e na meta'
 })
+await checar('Content-Security-Policy publicada', async () => {
+  const r = await buscar(`${site}/`)
+  const csp = r.headers.get('content-security-policy') || ''
+  exigir(/script-src 'self'/.test(csp), `header CSP ausente ou sem script-src 'self' ("${csp.slice(0, 80)}")`)
+  if (supabaseUrl) exigir(csp.includes(new URL(supabaseUrl).origin), 'CSP não libera o Supabase de homologação')
+  return 'só o próprio site e o Supabase de homologação'
+})
 await checar('robots.txt bloqueia buscadores', async () => {
   const r = await buscar(`${site}/robots.txt`)
   exigir(r.ok, `HTTP ${r.status}`)
@@ -185,6 +192,11 @@ if (env.HOMOL_TESTE_RE && env.HOMOL_TESTE_SENHA) {
     exigir(p.ok, `tabela profiles: HTTP ${p.status} (migrações aplicadas?)`)
     const linhas = await p.json()
     exigir(Array.isArray(linhas) && linhas.length > 0, 'o usuário de teste não enxerga o próprio perfil')
+    // Sem a tabela de aceite, ninguém passa da tela da política de uso.
+    const ac = await buscarComRetry(`${supabaseUrl}/rest/v1/aceites_politica?select=versao&limit=1`, {
+      headers: { apikey: anonKey, authorization: `Bearer ${access_token}` },
+    })
+    exigir(ac.ok, `tabela aceites_politica: HTTP ${ac.status} (migração 0007 aplicada?)`)
   })
 } else {
   registrar('Login e leitura do perfil (RLS)', true, 'pulado: secrets HOMOL_TESTE_RE e HOMOL_TESTE_SENHA não configurados')
