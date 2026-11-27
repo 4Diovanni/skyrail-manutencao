@@ -4,6 +4,7 @@ import { MeuPerfilPage } from '../auth/MeuPerfilPage'
 import { RequireAuth } from '../auth/RequireAuth'
 import { TrocarSenhaPage } from '../auth/TrocarSenhaPage'
 import { PassagemPage } from '../modules/passagem/ui/PassagemPage'
+import { PoliticaPage } from '../modules/politica/ui/PoliticaPage'
 import { NovaPreventivaPage } from '../modules/preventivas/ui/NovaPreventivaPage'
 import { PreventivaPage } from '../modules/preventivas/ui/PreventivaPage'
 import { PreventivasPage } from '../modules/preventivas/ui/PreventivasPage'
@@ -35,6 +36,7 @@ export const router = createBrowserRouter([
           { path: 'perfil', element: <MeuPerfilPage /> },
           { path: 'perfil/assinatura', element: <MinhaAssinaturaPage /> },
           { path: 'passagem', element: <PassagemPage /> },
+          { path: 'politica', element: <PoliticaPage /> },
         ],
       },
     ],

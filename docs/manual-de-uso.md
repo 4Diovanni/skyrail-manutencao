@@ -17,7 +17,9 @@ A parte 2 é para supervisores e administradores (uso no PC). A instalação té
 
 1. Digite a sua **matrícula (RE)**, só números, e a senha.
 2. No **primeiro acesso**, o app pede para trocar a senha provisória por uma senha só sua.
-3. Esqueceu a senha? Peça ao administrador uma nova senha provisória.
+3. Depois, o app mostra a **política de uso**. Marque "Li e aceito" e toque em **Aceitar e continuar** (precisa de internet).
+   Quando o texto da política mudar, o app pede o aceite de novo. Para reler, abra **Política de uso** no menu.
+4. Esqueceu a senha? Peça ao administrador uma nova senha provisória.
 
 O selo no topo mostra **Online** ou **Sem internet**. O menu (☰) leva a todas as telas.
 

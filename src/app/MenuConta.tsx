@@ -51,6 +51,7 @@ export function MenuConta() {
           </div>
           <Link role="menuitem" to="/perfil" onClick={fechar}>Meu perfil</Link>
           <Link role="menuitem" to="/perfil/assinatura" onClick={fechar}>Minha assinatura</Link>
+          <Link role="menuitem" to="/politica" onClick={fechar}>Política de uso</Link>
           <button role="menuitem" type="button" className="conta-sair" onClick={() => void sairComAviso()}>
             Sair
           </button>
