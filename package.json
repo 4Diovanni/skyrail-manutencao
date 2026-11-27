@@ -14,7 +14,8 @@
     "criar-usuario": "node --env-file-if-exists=.env.admin scripts/criar-usuario.mjs",
     "importar-checklists": "node --env-file-if-exists=.env.admin scripts/importar-checklists.mjs",
     "checar:segredos": "node scripts/checar-segredos.mjs",
-    "testar:homol": "node scripts/testar-homol.mjs"
+    "testar:homol": "node scripts/testar-homol.mjs",
+    "e2e": "node scripts/e2e/ponta-a-ponta.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.119.0",
