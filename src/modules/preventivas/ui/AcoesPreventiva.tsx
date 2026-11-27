@@ -7,6 +7,7 @@ import { assinarPreventiva } from '../data/assinaturas'
 import type { Preventiva } from '../domain/preventiva'
 import type { TipoDocPrev } from '../pdf/caminho'
 import { importarModulo } from '../../../lib/versaoNova'
+import { avisar } from '../../../lib/avisos'
 
 const BOTOES: [TipoDocPrev, string][] = [
   ['relatorio', 'Relatório'],
@@ -28,10 +29,10 @@ export function AcoesPreventiva({ p, nome }: { p: Preventiva & { equipe: string[
       const { entregarPdf } = await importarModulo(() => import('../../relatorio/pdf/servico'))
       const r = await gerarEGuardarPreventiva(p.id, tipo)
       setOcupado(null)
-      if (!r.guardado) alert('O PDF foi gerado, mas não foi possível guardar no servidor. Ele será entregue só neste aparelho.')
+      if (!r.guardado) avisar('fila', 'O PDF foi gerado, mas não foi possível guardar no servidor. Ele foi entregue só neste aparelho.')
       await entregarPdf(r.blob, r.nome)
     } catch (e) {
-      alert(`Erro ao gerar o PDF: ${(e as Error).message}`)
+      avisar('erro', `Erro ao gerar o PDF: ${(e as Error).message}`)
     } finally {
       setOcupado(null)
     }
@@ -47,9 +48,9 @@ export function AcoesPreventiva({ p, nome }: { p: Preventiva & { equipe: string[
       }
       if (!confirm(`Confirmar a sua assinatura nesta versão da preventiva “${nome}”?`)) return
       await assinarPreventiva(p.id, papeis)
-      alert('Assinatura aplicada. Ela aparece nos próximos PDFs desta versão.')
+      avisar('ok', 'Assinatura aplicada. Ela aparece nos próximos PDFs desta versão.')
     } catch (e) {
-      alert(`Não foi possível assinar: ${(e as Error).message}`)
+      avisar('erro', `Não foi possível assinar: ${(e as Error).message}`)
     } finally {
       setOcupado(null)
     }
