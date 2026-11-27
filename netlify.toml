@@ -22,3 +22,12 @@
   from = "/*"
   to = "/index.html"
   status = 200
+
+# Cada projeto da Netlify publica só a própria branch (homol: homologacao, prod: main).
+# Previews de PR e deploys de outras branches são cancelados antes do build, para não gastar créditos.
+# Os PRs são testados pelo CI do GitHub.
+[context.deploy-preview]
+  ignore = "exit 0"
+
+[context.branch-deploy]
+  ignore = "exit 0"
