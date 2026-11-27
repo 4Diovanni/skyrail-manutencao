@@ -1,8 +1,10 @@
 import { useCallback, useEffect, useState, type ReactNode } from 'react'
-import { sairComAviso } from '../../../app/sair'
 import { buscarAceite, guardarAceiteNoAparelho, registrarAceite, versaoAceitaNoAparelho } from '../data/aceite'
 import { precisaAceitar, VERSAO_POLITICA } from '../domain/politica'
 import { TextoPolitica } from './TextoPolitica'
+
+// Sair carrega as filas do aparelho (Dexie): vem só quando tocam em Sair, para a tela de login abrir leve.
+const sair = () => void import('../../../app/sair').then((m) => m.sairComAviso())
 
 type Estado = 'verificando' | 'aceita' | 'pendente' | 'erro'
 
@@ -58,7 +60,7 @@ export function AceitePolitica({ userId, children }: { userId: string; children:
         <p role="alert">Não foi possível conferir o aceite da política de uso. Confira a internet e tente de novo.</p>
         <div className="acoes-politica">
           <button type="button" onClick={() => void verificar()}>Tentar de novo</button>
-          <button type="button" className="sec" onClick={() => void sairComAviso()}>Sair</button>
+          <button type="button" className="sec" onClick={sair}>Sair</button>
         </div>
       </main>
     )
@@ -78,7 +80,7 @@ export function AceitePolitica({ userId, children }: { userId: string; children:
         <button type="button" disabled={!marcado || enviando} onClick={() => void aceitar()}>
           {enviando ? 'Registrando…' : 'Aceitar e continuar'}
         </button>
-        <button type="button" className="sec" onClick={() => void sairComAviso()}>Sair</button>
+        <button type="button" className="sec" onClick={sair}>Sair</button>
       </div>
     </main>
   )

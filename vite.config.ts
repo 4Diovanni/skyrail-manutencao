@@ -31,6 +31,21 @@ export default defineConfig({
       },
     }),
   ],
+  build: {
+    rolldownOptions: {
+      output: {
+        // Bibliotecas em arquivos separados: o código do app muda a cada entrega, elas quase nunca.
+        // Assim o celular baixa de novo só o que mudou, e nenhum arquivo passa de 500 KB.
+        advancedChunks: {
+          groups: [
+            { name: 'react', test: /node_modules[\\/](react|react-dom|scheduler|react-router|react-router-dom)[\\/]/ },
+            { name: 'supabase', test: /node_modules[\\/]@supabase[\\/]/ },
+            { name: 'dexie', test: /node_modules[\\/](dexie|dexie-react-hooks)[\\/]/ },
+          ],
+        },
+      },
+    },
+  },
   test: {
     include: ['src/**/*.test.ts'],
   },
