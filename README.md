@@ -2,6 +2,8 @@
 
 Reconstrução do app de manutenção da Linha 17 Ouro (monotrilho BYD SkyRail): Preventivas, Relatório de atividades e Passagem de turno.
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/f54c196e-ada1-470f-8617-3b024992a76e/deploy-status)](https://app.netlify.com/projects/skyrail/deploys)
+
 ## Stack
 React + TypeScript + Vite, PWA (vite-plugin-pwa), Supabase (Auth, Postgres com RLS, Storage), Dexie (fila offline).
 
